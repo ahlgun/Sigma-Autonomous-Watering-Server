@@ -8,20 +8,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/ip', (req, res) => {
-  res.JSON(req.ip);
+  res.json(req.ip);
 });
 
 app.get('/api', (req, res) => {
-  res.JSON(
-	  {
-		name:'Marigold',
-		waterAmountPerDay:'10ml'
-	  },
-	  {
-		name:'Avocado',
-		waterAmountPerDay:'5ml'
-	  }
-	);
+  res.json({name:'hello'})
 });
 
 
