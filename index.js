@@ -1,12 +1,13 @@
-var express = require('express');
-var app = express();
-
+var app = require('express')();
 app.set('port', (process.env.PORT || 5000));
 
-app.get('/', function(req, res) {
-  console.log('Connection detected. IP: ' + req.ip);
-  res.send('Welcome ' + req.ip);
+app.get('/', (req, res) => {
+  res.send('Welcome ' + savedData);
 });
+
+app.post('/api' (req, res) => {
+  
+})
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
