@@ -2,7 +2,7 @@ var app = require('express')();
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', (req, res) => {
-  res.send('Welcome ' + savedData);
+  res.send('Welcome ' + req.ip);
 });
 
 app.post('/api' (req, res) => {
