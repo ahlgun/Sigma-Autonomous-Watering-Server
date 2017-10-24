@@ -1,0 +1,23 @@
+{
+  "name": "sigma-itc-autonomous-watering",
+  "version": "1.0.0",
+  "description": "A sigma ITC autonomous watering project by Niklas & Gunnar",
+  "main": "index.js",
+  "scripts": {
+  	"start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository":{
+	"type":"git",
+	"url":"https://github.com/Sigma-Autonomous-Watering-Server.git"  	
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4"
+  }
+}
