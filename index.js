@@ -1,5 +1,5 @@
 var app = require('express')();
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 3000));
 
 var mongodb = require('mongodb').MongoClient;
 var connectionUrl = 'mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering';
@@ -13,32 +13,55 @@ app.get('/ip', (req, res) => {
   res.json(req.ip);
 });
 
+
+
+
+
+
 app.get('/plants', (req, res) => {
-	mongodb.connect(connectionUrl, (err, db) => {
-  	var collection = db.collection('plans')
-  	collection.find({},{}).toArray((err, result) => {
-  		if(err) {
-  			throw err;
-  		} else {
-  			res.json(result);
-  		}
-  	})
+  console.log('/plants')
+  mongodb.connect(connectionUrl, (err, db) => {
+  	console.log('db connection established.')
+		var collection = db.collection('plans')
+		collection.find({},{}).toArray((err, result) => {
+  		console.log('data found')
+  		console.log(result)
+			if(err) {
+				throw err;
+			} else {
+				res.json(result);
+			}
+		})
   })
 })
 
+app.get('/plants/add', (req, res) => {
+	console.log('add plant')
+	mongodb.connect(connectionUrl, (err, db) => {
+		db.collection('plants').insert({name: 'Marigold', type: 'Flower'})
+	})
+})
+
+
+
+
+
+
+
+
 app.get('/api', (req, res) => {
   res.json({
-    "plants":{
-      "vegetables":[
-        {
-          "name": "Tomato",
-          "watering": "Once every 4th day",
-          "description": "Red",
-          "imgUrl": "http://www.rona.ca/images/54615034_L.jpg",
-          "category": "vegetables"
-        }
-      ]
-    }
+	"plants":{
+	  "vegetables":[
+		{
+		  "name": "Tomato",
+		  "watering": "Once every 4th day",
+		  "description": "Red",
+		  "imgUrl": "http://www.rona.ca/images/54615034_L.jpg",
+		  "category": "vegetables"
+		}
+	  ]
+	}
   })
 });
 
