@@ -6,7 +6,8 @@ var mongoose = require('mongoose');
 // Plant object schema
 var plantSchema = mongoose.Schema({
     name:String,
-    type:String,
+    type:String
+
 });
 
 // Construct export
@@ -19,5 +20,6 @@ module.exports.getPlants = (callback, limit) => {
 
 // Add plant
 module.exports.addPlant = (data, callback) => {
+    console.log(data)
     Plant.create(data, callback);
 }
