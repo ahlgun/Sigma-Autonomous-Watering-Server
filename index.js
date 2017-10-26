@@ -1,47 +1,44 @@
+
+// --- | Dependencies | --- //
 var app = require('express')();
-app.set('port', (process.env.PORT || 5000));
+var mongoose = require('mongoose'); mongoose.connect('mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering', {useMongoClient:true});
+var bodyParser = require('body-parser'); var jsonParser = bodyParser.json({ type: 'application/json' });
 
-var mongodb = require('mongodb').MongoClient;
-var connectionUrl = 'mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering';
-
-// Landingpage
-app.get('/', (req, res) => {
-  res.sendFile("index.html", {root: __dirname })
+app.set('port', (process.env.PORT || 3000));
+app.use(jsonParser);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); 
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); 
+  next();
 });
 
-app.get('/ip', (req, res) => {
-  res.json(req.ip);
+Plants = require('./models/plant.js')
+
+
+// --- | Routes | --- //
+
+// Index
+app.get('/', (req, res) => {res.sendFile("/routes/index.html", {root: __dirname})});
+// Get plants
+app.get('/plants', function(req, res) {
+    Plants.getPlants(function(err, data) {
+        // If successfull, return json data, else throw error;
+        data ? res.json(data) : (err) => {throw err};
+    });
+});
+// Add plant
+app.post('/plants', function(req, res) {
+    var plant = req.body;
+    Plants.addPlant(car, function(err, data) {
+        console.log("Added plant: " + data)
+        // If successfull, return json data, else throw error;
+        data ? res.json(data) : (err) => {throw err};
+    });
 });
 
-app.get('/plants', (req, res) => {
-	mongodb.connect(connectionUrl, (err, db) => {
-  	var collection = db.collection('plans')
-  	collection.find({},{}).toArray((err, result) => {
-  		if(err) {
-  			throw err;
-  		} else {
-  			res.json(result);
-  		}
-  	})
-  })
-})
 
-app.get('/api', (req, res) => {
-  res.json({
-    "plants":{
-      "vegetables":[
-        {
-          "name": "Tomato",
-          "watering": "Once every 4th day",
-          "description": "Red",
-          "imgUrl": "http://www.rona.ca/images/54615034_L.jpg",
-          "category": "vegetables"
-        }
-      ]
-    }
-  })
-});
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
+
+
+// --- | Run server | --- //
+app.listen(app.get('port'), () => {console.log('Node app is running on port', app.get('port'));});
