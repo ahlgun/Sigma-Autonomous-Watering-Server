@@ -5,13 +5,11 @@ var mongoose = require('mongoose');
 
 // Plant object schema
 var plantSchema = mongoose.Schema({
-    {
-    	name: String,
-    	watering: String,
-    	description: String,
-    	imgUrl: String,
-    	category: String
-    }
+    name: String,
+    watering: String,
+    description: String,
+    imgUrl: String,
+    category: String
 });
 
 // Construct export
