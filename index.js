@@ -21,6 +21,7 @@ app.get('/', (req, res) => {res.sendFile("/routes/index.html", {root: __dirname}
 app.get('/plants', function(req, res) {
     Plants.getPlants(function(err, data) {
         // If successfull, return json data, else throw error;
+        console.log('Get request from IP: ' + req.ip)
         data ? res.json(data) : (err) => {throw err};
     });
 });
