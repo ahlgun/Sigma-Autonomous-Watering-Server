@@ -9,10 +9,14 @@
 	<br/>	
 	<h3 class="text-center">Edit endpoint</h3>
 	<hr/>
-	<h5>To edit:</h5>
+	<h5>To edit by id:</h5>
 	<ul>
-		<li>Send object in req.body as (JSON format) with 'POST' request</li>
-		<li>Include params:</li>
+		<li>Server takes two params through body as a 'POST' request:</li>
+		<ul>
+			<li>id: plant id</li>
+			<li>plant: plant data</li>
+		</ul>
+		<li>Include params in req.body.plant:</li>
 		<ul>
 			<li>Name</li>
 			<li>Watering</li>
@@ -21,6 +25,7 @@
 			<li>Category</li>
 		</ul>
 		<li>Include CORS-headers</li>
+		<li>Don't forget to JSON.parse() your request body!</li>
 	</ul>
 
 	<h6><a href="../"><button class="btn btn-primary">Go back</button></a></h6>
