@@ -13,8 +13,6 @@ app.use((req, res, next) => {
 });
 
 Plants = require('./models/plant.js')
-
-
 // --- | Routes | --- //
 
 // Index
@@ -35,10 +33,6 @@ app.post('/plants', function(req, res) {
         data ? res.json(data) : (err) => {throw err};
     });
 });
-
-
-
-
 
 // --- | Run server | --- //
 app.listen(app.get('port'), () => {console.log('Node app is running on port', app.get('port'));});
