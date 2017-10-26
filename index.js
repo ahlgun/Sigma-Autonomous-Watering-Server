@@ -13,7 +13,8 @@ app.use((req, res, next) => {
 });
 
 Plants = require('./models/plant.js')
-// --- | Routes | --- //
+
+
 
 // Index
 app.get('/', (req, res) => {res.sendFile("/routes/index.html", {root: __dirname})});
@@ -26,14 +27,40 @@ app.get('/plants', function(req, res) {
     });
 });
 // Add plant
-app.post('/plants', function(req, res) {
+app.post('/plants/add', function(req, res) {
     var plant = req.body;
-    Plants.addPlant(car, function(err, data) {
+    Plants.addPlant(plant, function(err, data) {
         console.log("Added plant: " + data)
         // If successfull, return json data, else throw error;
         data ? res.json(data) : (err) => {throw err};
     });
 });
+
+/*
+
+// Add plant
+app.post('/plants/edit', function(req, res) {
+    var plant = req.body;
+    Plants.addPlant(plant, function(err, data) {
+        console.log("Added plant: " + data)
+        // If successfull, return json data, else throw error;
+        data ? res.json(data) : (err) => {throw err};
+    });
+});
+
+
+// Add plant
+app.post('/plants/remove', function(req, res) {
+    var plant = req.body;
+    Plants.(plant, function(err, data) {
+        console.log("Added plant: " + data)
+        // If successfull, return json data, else throw error;
+        data ? res.json(data) : (err) => {throw err};
+    });
+});
+
+
+*/
 
 // --- | Run server | --- //
 app.listen(app.get('port'), () => {console.log('Node app is running on port', app.get('port'));});

@@ -22,10 +22,18 @@ module.exports.getPlants = (callback, limit) => {
 
 // Add plant
 module.exports.addPlant = (data, callback) => {
-    console.log(data)
     Plant.create(data, callback);
 }
 
+// Remove plant
+module.exports.removePlant = (_id, callback) => {
+    Plant.findByIdAndRemove(_id, callback);
+}
+
+// Edit plant
+module.exports.editPlant = (_id, car, options, callback) => {
+    Plant.findOneAndUpdate({_id:_id}, plant, options, callback);
+}
 
 
 
