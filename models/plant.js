@@ -31,7 +31,7 @@ module.exports.removePlant = (_id, callback) => {
 }
 
 // Edit plant
-module.exports.editPlant = (_id, car, options, callback) => {
+module.exports.editPlant = (_id, plant, options, callback) => {
     Plant.findOneAndUpdate({_id:_id}, plant, options, callback);
 }
 
