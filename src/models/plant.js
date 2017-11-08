@@ -1,6 +1,4 @@
 'use strict';
-
-// Load mongo module
 var mongoose = require('mongoose');
 
 // Plant object schema
@@ -18,6 +16,10 @@ var Plant = module.exports = mongoose.model('Plants', plantSchema);
 // Get all plants
 module.exports.getPlants = (callback, limit) => {
     Plants.find(callback).limit(limit);
+}
+
+module.exports.getOnePlant = (id, callback) => {
+	Plants.findById({_id:id}, callback);
 }
 
 // Add plant

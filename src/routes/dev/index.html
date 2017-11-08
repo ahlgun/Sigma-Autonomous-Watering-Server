@@ -23,15 +23,27 @@
 </div>
 
 <script>
+console.log('ready')
+
 $(function() {
 	var socket = io();
 	$('form').submit(function() {
 	    var input = $('form').find("input");
-	    socket.emit('water', {user:{email:'Gahlbom@gmail.com', token:'#98hiuh87g27948k'}, payload:input.val()});
+	    socket.emit(
+	    	'user-water-plant', 
+	    	{
+	    		user: {
+	    			email:'Gahlbom@gmail.com', 
+	    			token:'#98hiuh87g27948k'
+	    		}, 
+	    		payload:input.val()
+	    	}
+	    );
 	    input.val('');
+	    console.log('Request sent')
 	    return false;
 	});
-	socket.on('water-confirmation', function(data) {
+	socket.on('user-water-plant-confirmation', function(data) {
 		console.log(data);
 	});
 });
