@@ -4,7 +4,7 @@
   "description": "A sigma ITC autonomous watering project by Niklas & Gunnar",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +20,7 @@
     "express": "^4.16.2",
     "mongodb": "^2.2.33",
     "mongoose": "^4.12.4",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "socketio-auth": "^0.1.0"
   }
 }

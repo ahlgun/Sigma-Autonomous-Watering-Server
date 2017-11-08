@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sigma ITC Watering</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	<script src='https://code.jquery.com/jquery-1.11.1.js'></script>
+    <script src='/socket.io/socket.io.js'></script>
+</head>
+<body>
+<div class="container text-center">
+	<br/>
+	<h3>Dev</h3>
+	<hr/>
+	<div class="row">
+		<h5>Pocket-C.H.I.P controller</h5>
+	</div>
+
+	<form>
+		<input placeholder="Message">
+		<button>Submit</button>
+	</form>
+	<h6><a href="../"><button class="btn btn-primary">Go back</button></a></h6>
+</div>
+
+<script>
+$(function() {
+	var socket = io();
+	$('form').submit(function() {
+	    var input = $('form').find("input");
+	    socket.emit('water', {user:{email:'Gahlbom@gmail.com', token:'#98hiuh87g27948k'}, payload:input.val()});
+	    input.val('');
+	    return false;
+	});
+	socket.on('water-confirmation', function(data) {
+		console.log(data);
+	});
+});
+
+
+</script>
+
+
+</body>
+</html>
