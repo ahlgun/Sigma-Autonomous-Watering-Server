@@ -26,8 +26,6 @@ Plants = require('./models/plant.js')
 
 /* Socket.io Events */
 io.on('connection', (socket) => {
-  console.log('User connected')
-  socket.emit('user-connection', 'You are now connected to SOCKET.IO');
   socket.on('water', function(data) {
     let requestConfirmation = 'Server recieved your request. ';
     if(!data.user)    requestConfirmation += '\n No user was present in request. ';
