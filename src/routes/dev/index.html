@@ -43,8 +43,8 @@ $(function() {
 	    console.log('Request sent')
 	    return false;
 	});
-	socket.on('user-water-plant-confirmation', function(data) {
-		console.log(data);
+	socket.on('user-water-plant-confirmation', () => {
+		console.log('Chip successfully watered');
 	});
 });
 

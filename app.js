@@ -64,7 +64,8 @@ io.on('connection', (socket) => {
 
   /* Chip */
   socket.on('chip-water-plant-confirmation', () => {
-  	console.log('Chip watered!', data);
+  	console.log('Chip watered!');
+  	socket.emit('user-water-plant-confirmation');
   })
 
 
