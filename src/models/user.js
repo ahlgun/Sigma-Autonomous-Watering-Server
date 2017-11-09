@@ -2,9 +2,9 @@
 var mongoose = require('mongoose');
 
 // User object schema
-var userSchema = mongoose.Schema({
-    email: String,
-    token: String
+var userSchema = new Schema({
+    username: { type: String, required: true, index: { unique: true } },
+    password: { type: String, required: true }
 });
 
 // Construct export

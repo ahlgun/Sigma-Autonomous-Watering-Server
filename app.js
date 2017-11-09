@@ -14,6 +14,7 @@ app.use((req, res, next) => {
   next();
 });
 
+Chip = require('./src/models/chip.js')
 Plants = require('./src/models/plant.js')
 //Routes = require('./routes/server/routes.js')
 
@@ -27,7 +28,7 @@ io.on('connection', (socket) => {
   	console.log('A user disconnected');
   })
 
-  /* System-level actions */
+  /* System actions */
   socket.on('system-add-user', (data) => {
   	SocketHandler.systemAddUser(data, socket);
   });
@@ -38,7 +39,7 @@ io.on('connection', (socket) => {
   	SocketHandler.systemGetUsers(data, socket);
   });
 
-  /* User-level actions */
+  /* User actions */
   socket.on('user-add-plant', (data) => {
   	SocketHandler.userAddPlant(data, socket);
   });
@@ -60,6 +61,12 @@ io.on('connection', (socket) => {
   socket.on('user-get-one-plant', (data) => {
   	SocketHandler.userGetOnePlant(data, socket);
   });
+
+  /* Chip */
+  socket.on('chip-water-plant-confirmation', () => {
+  	console.log('Chip watered!', data);
+  })
+
 
 });
 
