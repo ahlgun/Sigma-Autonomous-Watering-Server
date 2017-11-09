@@ -43,17 +43,5 @@ exports.userGetOnePlant = function(data, socket) {
 exports.userFindPlant = function(data, socket) {}
 
 exports.userWaterPlant = function(data, socket) {
-	
-	let requestConfirmation = 'Server recieved a request. ';
-  if(!data.user)    requestConfirmation += '\n No user was present in request. ';
-  if(!data.payload) requestConfirmation += '\n No payload was present in request';
-  if(data.user && data.payload) {
-    requestConfirmation += '\n User: ' + data.user.email + '\n Token: ' + data.user.token;
-    requestConfirmation += '\n Payload: ' + data.payload;
-  }
-  
-  console.log(requestConfirmation);
-  console.log('Emiting request to water plant.');
   socket.emit('chip-water-plant');
-
 }
