@@ -1,32 +1,31 @@
 
 /* Express */
 var app = require('express')();
+
 /* Socket.io */
 var http = require('http').Server( app );
 var io = require('socket.io')( http, { wsEngine: 'ws' } );
+
 /* Db & middleware */
 var mongoose = require('mongoose'); mongoose.connect('mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering', {useMongoClient:true});
-var bodyParser = require('body-parser').json({type: 'application/json'}); 
-app.set('port', (process.env.PORT || 3000));
-app.use( bodyParser );
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); 
-  next();
-});
-
-Chip = require('./src/models/chip.js')
-Plants = require('./src/models/plant.js')
-//Routes = require('./routes/server/routes.js')
+var bodyParser = require('body-parser').json({type: 'application/json'});     
+    app.set('port', (process.env.PORT || 3000));
+    app.use( bodyParser );
+    app.use((req, res, next) => {
+      res.header("Access-Control-Allow-Origin", "*"); res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); 
+      next();
+    });
 
 var SocketHandler = require('./src/exports/SocketHandler.js');
 
+/* Socket on user connection */
 io.on('connection', (socket) => {
 
   /* Generic */
   console.log('A user connected');
   socket.on('disconnect', (socket) => {
   	console.log('A user disconnected');
-  })
+  });
 
   /* System actions */
   socket.on('system-add-user', (data) => {
@@ -40,8 +39,8 @@ io.on('connection', (socket) => {
   });
 
   /* User actions */
-  socket.on('user-add-plant', (data) => {
-  	SocketHandler.userAddPlant(data, socket);
+  socket.on('user-add-plant', (plant) => {
+  	SocketHandler.userAddPlant(plant, socket);
   });
   socket.on('user-remove-plant', (data) => {
   	SocketHandler.userRemovePlant(data, socket);
@@ -66,8 +65,6 @@ io.on('connection', (socket) => {
   socket.on('chip-water-plant-confirmation', (data) => {
   	socket.emit('user-water-plant-confirmation', data);
   })
-
-
 });
 
 

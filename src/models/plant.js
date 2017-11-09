@@ -23,8 +23,8 @@ module.exports.getOnePlant = (id, callback) => {
 }
 
 // Add plant
-module.exports.addPlant = (data, callback) => {
-    Plants.create(data, callback);
+module.exports.addPlant = (plant, callback) => {
+    Plants.create(plant, callback);
 }
 
 // Remove plant

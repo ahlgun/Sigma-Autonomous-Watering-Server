@@ -1,15 +1,20 @@
 
 var mongoose = require('mongoose');
+
 Plants = require('./../models/plant.js')
+Users = require('./../models/user.js')
 
-
-exports.systemAddUser = function(data, socket) {}
+exports.systemAddUser = function(data, socket) {
+	Users.createUser(data.user, (err, success) => {
+  	success ? socket.emit('system-add-user-confirmation', success) : (err) => {throw err}; 
+	})
+}
 exports.systemRemoveUser = function(data, socket) {}
 exports.systemGetUsers = function(data, socket) {}
 
 
-exports.userAddPlant = function(data, socket) {
-  Plants.addPlant(data.plant, (err, success) => { 
+exports.userAddPlant = function(plant, socket) {
+  Plants.addPlant(plant, (err, success) => { 
   	success ? socket.emit('user-add-plant-confirmation', success) : (err) => {throw err}; 
   });
 }

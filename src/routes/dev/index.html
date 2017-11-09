@@ -30,21 +30,20 @@ $(function() {
 	$('form').submit(function() {
 	    var input = $('form').find("input");
 	    socket.emit(
-	    	'user-water-plant', 
+	    	'system-add-user', 
 	    	{
 	    		user: {
-	    			email:'Gahlbom@gmail.com', 
-	    			token:'#98hiuh87g27948k'
-	    		}, 
-	    		payload:input.val()
+	    			name:'Gahlbom@gmail.com', 
+	    			hash:'#98hiuh87g27948k'
+	    		}
 	    	}
 	    );
 	    input.val('');
 	    console.log('Request sent')
 	    return false;
 	});
-	socket.on('user-water-plant-confirmation', (data) => {
-		console.log('Chip successfully watered');
+	socket.on('system-add-user-confirmation', (data) => {
+		console.log('User created: ', data);
 	});
 });
 
