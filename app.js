@@ -63,8 +63,8 @@ io.on('connection', (socket) => {
   });
 
   /* Chip */
-  socket.on('chip-water-plant-confirmation', () => {
-  	socket.emit('user-water-plant-confirmation');
+  socket.on('chip-water-plant-confirmation', (data) => {
+  	socket.emit('user-water-plant-confirmation', data);
   })
 
 
