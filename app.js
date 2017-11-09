@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
   	SocketHandler.userFindPlant(data, socket);
   });
   socket.on('user-water-plant', (data) => {
-  	SocketHandler.userWaterPlant(data, socket);
+    socket.emit('chip-water-plant', data);
   });
   socket.on('user-get-one-plant', (data) => {
   	SocketHandler.userGetOnePlant(data, socket);

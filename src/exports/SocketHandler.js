@@ -43,5 +43,4 @@ exports.userGetOnePlant = function(data, socket) {
 exports.userFindPlant = function(data, socket) {}
 
 exports.userWaterPlant = function(data, socket) {
-  socket.emit('chip-water-plant');
 }
