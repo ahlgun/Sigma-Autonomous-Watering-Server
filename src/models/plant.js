@@ -11,7 +11,7 @@ var plantSchema = mongoose.Schema({
 });
 
 // Construct export
-var Plant = module.exports = mongoose.model('Plants', plantSchema);
+var Plants = module.exports = mongoose.model('Plants', plantSchema);
 
 // Get all plants
 module.exports.getPlants = (callback, limit) => {
@@ -24,17 +24,17 @@ module.exports.getOnePlant = (id, callback) => {
 
 // Add plant
 module.exports.addPlant = (data, callback) => {
-    Plant.create(data, callback);
+    Plants.create(data, callback);
 }
 
 // Remove plant
 module.exports.removePlant = (_id, callback) => {
-    Plant.findByIdAndRemove(_id, callback);
+    Plants.findByIdAndRemove(_id, callback);
 }
 
 // Edit plant
 module.exports.editPlant = (_id, plant, options, callback) => {
-    Plant.findOneAndUpdate({_id:_id}, plant, options, callback);
+    Plants.findOneAndUpdate({_id:_id}, plant, options, callback);
 }
 
 
