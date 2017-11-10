@@ -2,8 +2,10 @@
 var mongoose = require('mongoose');
 var User = require('./../models/user.js');
 
+
+
 exports.systemAddUser = function(payload, socket) {
-	User.createUser(payload, (err, success) => {
+	User.addUser(payload, (err, success) => {
   	success ? socket.emit('system-add-user-confirmation', success) : (err) => {throw err}; 
 	});
 }
@@ -25,6 +27,9 @@ exports.systemLoginUser = function(payload, socket) {
   	success ? socket.emit('system-login-user-confirmation', success) : (err) => {throw err};
 	});
 }
+
+
+
 
 exports.userAddChip = function(payload, socket) {
 	User.addChip(payload, (err, success) => {
