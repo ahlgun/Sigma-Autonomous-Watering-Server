@@ -5,51 +5,86 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 	<script src='https://code.jquery.com/jquery-1.11.1.js'></script>
     <script src='/socket.io/socket.io.js'></script>
+    <style>
+        form {
+       	    border:2px solid #333;
+       	    padding:10px;
+            margin:5px;
+        }
+    </style>
 </head>
 <body>
 <div class="container text-center">
-	<br/>
-	<h3>Dev</h3>
-	<hr/>
-	<div class="row">
-		<h5>Pocket-C.H.I.P controller</h5>
-	</div>
 
-	<form>
-		<input placeholder="Message">
-		<button>Submit</button>
+	<br/><h3>Dev</h3><hr/>
+	<button id="getUsersSubmit">Get users</button>
+	<hr/>
+
+	<form id="loginUser">
+		<h2>Login</h2>
+		<input id="loginUsername" placeholder="Username">
+		<input id="loginPassword" placeholder="Password">
+		<button id="loginUserSubmit">Submit</button>
 	</form>
+
+	<form id="createUser">
+		<h2>Create User</h2>
+		<input id="createUsername" placeholder="Username">
+		<input id="createPassword" placeholder="Password">
+		<button id="createUserSubmit">Submit</button>
+	</form>
+
+	<form id="removeUser">
+		<h2>Remove User</h2>
+		<input id="removeId" placeholder="id">
+		<button id="removeUserSubmit">Submit</button>
+	</form>
+
+	<hr/>
 	<h6><a href="../"><button class="btn btn-primary">Go back</button></a></h6>
+
 </div>
 
 <script>
-console.log('ready')
-
 $(function() {
+
 	var socket = io();
-	$('form').submit(function() {
-	    var input = $('form').find("input");
-	    socket.emit(
-	    	'system-add-user', 
-	    	{
-	    		user: {
-	    			name:'Gahlbom@gmail.com', 
-	    			hash:'#98hiuh87g27948k'
-	    		}
-	    	}
-	    );
-	    input.val('');
-	    console.log('Request sent')
-	    return false;
+
+	$('#createUserSubmit').click(() => {
+		var username = $('#createUsername').val();
+		var password = $('#createPassword').val();
+		socket.emit('system-add-user', {username:username, password:password}); 
+		return false; 
 	});
+	$('#removeUserSubmit').click(() => {
+		var id = $('#removeId').val();
+		socket.emit('system-remove-user', {id:id});
+		return false;
+	});
+	$('#loginUserSubmit').click(() => {
+		var username = $('#loginUsername').val();
+		var password = $('#loginPassword').val();
+		socket.emit('system-login-user', {username:username, password:password});
+		return false;
+	});
+	$('#getUsersSubmit').click(() => { 
+		socket.emit('system-get-users', {}); 
+	});
+
 	socket.on('system-add-user-confirmation', (data) => {
 		console.log('User created: ', data);
 	});
+	socket.on('system-get-users-confirmation', (data) => {
+		console.log('Users: ', data);
+	});
+	socket.on('system-login-user-confirmation', (data) => {
+		console.log('User ' + data.username + ' is now logged in.');
+	});
+	socket.on('system-remove-user-confirmation', (data) => {
+		console.log('User ' + data.username + ' has been removed.');
+	});
+
 });
-
-
 </script>
-
-
 </body>
 </html>

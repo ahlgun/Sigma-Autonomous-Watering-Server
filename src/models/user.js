@@ -1,50 +1,67 @@
 'use strict';
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
 
-// User object schema
+/*   User(username, password) > [Chip](name, id) > [Plants](name, id, slot) > [Measurements](time, value)   */
+
 var userSchema = mongoose.Schema({
-    username: {
-    	type: String, 
-    	required:true
-    },
-    hash: {
-    	type: String
-    }
+ 
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+
+  chip: [{
+    name: { type: String, required: true },
+    id: { type: String, required: true},
+    
+    plants: [{
+      name: { type: String, required: true },
+      id: { type: String, required: true  },
+      slot: { type: Number, required: true },
+      
+      measurements:[{
+        time: { type: String },
+        value: { type: String }
+      }]
+    
+    }]
+
+  }]
+
 });
 
-// Construct export
-var Users = module.exports = mongoose.model('Users', userSchema);
-
+var User = module.exports = mongoose.model('User', userSchema);
 
 module.exports.createUser = function(payload, callback) {
-	var username = payload.username;
-	var password = payload.password;
-	//var hash = bcrypt(password);
-	var user = {username:username, hash:password}
-    Users.create(user, callback);
+  var username = payload.username;
+  var password = payload.password;
+  bcrypt.hash(password, saltRounds, function(err, hash) {
+    if(!err) {
+      password = hash;
+      User.create({username:username, password:password}, callback);
+    } else {console.log(err)};
+  });
 }
 
-/*
-// Get all users
-module.exports.getUsers = (callback, limit) => {
-    Users.find(callback).limit(limit);
+module.exports.getUsers = (payload, callback) => {
+  User.find(callback).limit(payload.limit);
 }
 
-// Add user
-module.exports.createUser = (data, callback) => {
-    Users.create(data, callback);
+module.exports.removeUser = (payload, callback) => {
+  User.findByIdAndRemove({_id:payload.id}, callback);
 }
 
-// Remove user
-module.exports.removeUser = (_id, callback) => {
-    Users.findByIdAndRemove(_id, callback);
+module.exports.loginUser = (payload, callback) => {
+  User.findOne({username:payload.username}, callback);
 }
 
-// Remove user
-module.exports.addPlant = (_id, callback) => {
-    Users.findByIdAndRemove(_id, callback);
+
+/*  Payload = payload.chip(name, id) + payload.user(id); */
+module.exports.addChip = (payload, callback) => {
+  User.findOneAndUpdate( payload.user.id, { $push: { chip: { name: payload.chip.name, id: payload.chip.id } } }, callback);
 }
 
-*/
+module.exports.addChipMeasurement = (payload, callback) => {
 
+}
 

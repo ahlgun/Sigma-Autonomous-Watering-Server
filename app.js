@@ -1,109 +1,50 @@
-
-/* Express */
+'use strict';
 var app = require('express')();
-
-/* Socket.io */
 var http = require('http').Server( app );
 var io = require('socket.io')( http, { wsEngine: 'ws' } );
-
-/* Db & middleware */
 var mongoose = require('mongoose'); mongoose.connect('mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering', {useMongoClient:true});
 var bodyParser = require('body-parser').json({type: 'application/json'});     
-    app.set('port', (process.env.PORT || 3000));
-    app.use( bodyParser );
-    app.use((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "*"); res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); 
-      next();
-    });
+app.set('port', (process.env.PORT || 3000)); app.use( bodyParser ); app.use((req, res, next) => {res.header("Access-Control-Allow-Origin", "*"); res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); next();});
 
 var SocketHandler = require('./src/exports/SocketHandler.js');
 
-/* Socket on user connection */
-io.on('connection', (socket) => {
-
-  /* Generic */
+io.on('connection', socket => {
+  /* On connect & disconnect */
   console.log('A user connected');
-  socket.on('disconnect', (socket) => {
-  	console.log('A user disconnected');
+  socket.on('disconnect', socket => {console.log('A user disconnected');});
+  
+  /* System-user-handler */
+  socket.on('system-add-user', payload => {
+  	SocketHandler.systemAddUser(payload, socket);
+  });
+  socket.on('system-get-users', payload => {
+  	SocketHandler.systemGetUsers(payload, socket);
+  });
+  socket.on('system-remove-user', payload => {
+    SocketHandler.systemRemoveUser(payload, socket);
+  });
+  socket.on('system-login-user', payload => {
+    SocketHandler.systemLoginUser(payload, socket);
   });
 
-  /* System actions */
-  socket.on('system-add-user', (data) => {
-  	SocketHandler.systemAddUser(data, socket);
-  });
-  socket.on('system-remove-user', (data) => {
-  	SocketHandler.systemRemoveUser(data, socket);
-  });
-  socket.on('system-get-users', (data) => {
-  	SocketHandler.systemGetUsers(data, socket);
-  });
+  /* User-plant-handler */
+  socket.on('user-add-plant', plant => {});
+  socket.on('user-remove-plant', data => {});
+  socket.on('user-edit-plant', data => {});
+  socket.on('user-get-plants', data => {});
+  socket.on('user-find-plant', data => {});
+  socket.on('user-water-plant', data => {});
+  socket.on('user-get-one-plant', data => {});
 
-  /* User actions */
-  socket.on('user-add-plant', (plant) => {
-  	SocketHandler.userAddPlant(plant, socket);
-  });
-  socket.on('user-remove-plant', (data) => {
-  	SocketHandler.userRemovePlant(data, socket);
-  });
-  socket.on('user-edit-plant', (data) => {
-  	SocketHandler.userEditPlant(data, socket);
-  });
-  socket.on('user-get-plants', (data) => {
-  	SocketHandler.userGetPlants(data, socket);
-  });
-  socket.on('user-find-plant', (data) => {
-  	SocketHandler.userFindPlant(data, socket);
-  });
-  socket.on('user-water-plant', (data) => {
-    socket.emit('chip-water-plant', data);
-  });
-  socket.on('user-get-one-plant', (data) => {
-  	SocketHandler.userGetOnePlant(data, socket);
-  });
-
-  /* Chip */
-  socket.on('chip-water-plant-confirmation', (data) => {
-  	socket.emit('user-water-plant-confirmation', data);
-  })
 });
 
 
 
-
-/* Client endpoints */
-
-/* HOMEPAGE */
-app.get('/', (req, res) => { 
-	res.sendFile("./src/routes/client/index.html", {root:__dirname}); 
-});
-
-
-/* API endpoints */
-/* 'POST' */
-/* app.post('/api/plants/add', (req, res) => {
-  Plants.addPlant(req.body, (err, data) =>                         { data ? res.json(data) : (err) => {throw err}; });
-});
-app.post('/api/plants/edit', (req, res) => {
-  Plants.editPlant(req.body.id, req.body.plant, {}, (err, data) => { data ? res.json(data) : (err) => {throw err}; });
-});
-app.post('/api/plants/remove', (req, res) => {
-  Plants.removePlant(req.body.id, (err, data) =>                   { data ? res.json(data) : (err) => {throw err}; });
-}); */
-
-/* 'GET' */
-app.get('/api/plants', (req, res) => {
-  Plants.getPlants((err, data) =>                                  { data ? res.json(data) : (err) => {throw err}; });
-});
-app.get('/api', (req, res) =>               { res.sendFile("./src/routes/api/index.html",  {root:__dirname}); });
-app.get('/api/plants/add', (req, res) =>    { res.sendFile("./src/routes/api/add.html",    {root:__dirname}); });
-app.get('/api/plants/edit', (req, res) =>   { res.sendFile("./src/routes/api/edit.html",   {root:__dirname}); });
+app.get('/',                  (req, res) => { res.sendFile("./src/routes/client/index.html", {root:__dirname}); });
+app.get('/dev',               (req, res) => { res.sendFile("./src/routes/dev/index.html",  {root:__dirname}); });
+app.get('/api/plants',        (req, res) => { Plants.getPlants((err, data) => {data ? res.json(data) : (err) => {throw err}; });});
+app.get('/api',               (req, res) => { res.sendFile("./src/routes/api/index.html",  {root:__dirname}); });
+app.get('/api/plants/add',    (req, res) => { res.sendFile("./src/routes/api/add.html",    {root:__dirname}); });
+app.get('/api/plants/edit',   (req, res) => { res.sendFile("./src/routes/api/edit.html",   {root:__dirname}); });
 app.get('/api/plants/remove', (req, res) => { res.sendFile("./src/routes/api/remove.html", {root:__dirname}); });
-
-/* Development */
-app.get('/dev', (req, res) =>               { res.sendFile("./src/routes/dev/index.html",  {root:__dirname}); });
-
-
-/* Server start */
-http.listen(app.get('port'), () => {
-	console.log('Node app is running on port', app.get('port'));
-});
+http.listen(app.get('port'),  () => { console.log('Node app is running on port', app.get('port')); });
