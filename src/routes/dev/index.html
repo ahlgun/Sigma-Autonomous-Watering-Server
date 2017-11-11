@@ -18,6 +18,7 @@
 
 	<br/><h3>Dev</h3><hr/>
 	<button id="getUsersSubmit">Get users</button>
+	<button id="getPlantsSubmit">Get plants</button>
 	<hr/>
 
 	<form id="loginUser">
@@ -70,6 +71,9 @@ $(function() {
 	$('#getUsersSubmit').click(() => { 
 		socket.emit('system-get-users', {}); 
 	});
+    $('#getPlantsSubmit').click(() => {
+        socket.emit('system-get-all-plants', {});
+    });
 
 	socket.on('system-add-user-confirmation', (data) => {
 		console.log('User created: ', data);
@@ -77,6 +81,11 @@ $(function() {
 	socket.on('system-get-users-confirmation', (data) => {
 		console.log('Users: ', data);
 	});
+
+    socket.on('system-get-plants-confirmation', (data) => {
+        console.log('Plants: ', data);
+    });
+
 	socket.on('system-login-user-confirmation', (data) => {
 		console.log('User ' + data.username + ' is now logged in.');
 	});
