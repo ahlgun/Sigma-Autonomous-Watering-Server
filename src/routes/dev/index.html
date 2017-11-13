@@ -58,13 +58,13 @@
 		<button id="addChipSubmit">Submit</button>
 	</form>
 
-	<form id="addChip">
+	<form id="addPlant">
 		<h2>Add Plant to chip [0]</h2>
 		<input id="addPlantUsername" placeholder="Username">
 		<input id="addPlantPassword" placeholder="Password">
 		<input id="addPlantName" placeholder="Plant name">
-		<input id="addPlantSlot" placeholder="Plant slot">
-		<button id="addChipSubmit">Submit</button>
+		<input id="addPlantStationName" placeholder="Station name">
+		<button id="addPlantSubmit">Submit</button>
 	</form>
 
 	<form id="getStations">
@@ -129,7 +129,7 @@ $(function() {
 				slot: $('#addPlantSlot').val()
 			},
 			station: {
-				name: $('#addPlantChipName').val()
+				name: $('#addPlantStationName').val()
 			},
 			user: {
 				username: $('#addPlantUsername').val(),

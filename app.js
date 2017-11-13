@@ -8,7 +8,7 @@ var session = require('express-session');
 var http = require('http').Server( app );
 var io = require('socket.io')( http, { wsEngine: 'ws' } );
 var sharedsession = require("express-socket.io-session");
-
+http://localhost
 /* MongoDB + Mongoose */
 var mongoose = require('mongoose'); mongoose.connect('mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering', {useMongoClient:true});
 

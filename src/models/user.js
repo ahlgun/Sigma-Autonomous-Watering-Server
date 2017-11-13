@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
+var Plant = require('./../models/plant.js');
 
 /*   User(username, password) > [station](name, id) > [Plants](name, id, slot) > [Measurements](time, value)   */
 
@@ -14,19 +15,7 @@ var userSchema = mongoose.Schema({
     
     name: { type: String, required: true },
 
-    plants: [{
-      
-      name: { type: String, required: true },
-      slot: { type: Number, required: true },
-
-      measurements:[{
-        
-        time:  { type: String },
-        value: { type: String }
-
-      }]
-
-    }]
+    plants: []
 
   }]
 
@@ -54,58 +43,52 @@ module.exports.getStation = (payload, callback) => {
   var username = payload.user.username;
 }
 
-module.exports.addStation = (payload, callback) => {
+module.exports.addStation = (payload, callback) =>{
 
-  console.log('Adding station')
+      console.log('Adding station')
 
-  var stationName = payload.station.name;
-  var username = payload.user.username;
-  var password = payload.user.password;
+      var stationName = payload.station.name;
+      var username = payload.user.username;
+      var password = payload.user.password;
 
-  User.findOne({username:username}, (err, user) => {
-    if(user) {
-      bcrypt.compare(password, user.password, (err, res) => {
-        if(res) {
-          User.update(
-            {_id: user._id}, 
-            { $push: 
-              { stations: 
-                { name: stationName } 
-              } 
-            }, 
-            callback
-          );
-          console.log('Added station')
-        } else {
-          console.log('Wrong password. \n Try again.')  
-        }
-      });
-    } else {
-      console.log('User ' + username + ' could not be found.');
-    }
-  });
+      User.findOne({username: username}, (err, user) => {
+          if(user) {
+
+              User.update(
+                  {_id: user._id},
+                  {
+                      $push:
+                          {
+                              stations:
+                                  {name: stationName}
+                          }
+                  },
+                  callback
+              );
+              console.log('Added station')
+
+
+          };
+  })
 }
 
 
-module.exports.addPlant = (payload, callback) => {
-
-  // Get user 
-    // Push data to stations
-      // Return
-
-  User.findOne({username:payload.user.username}, (err, user) => {
-
-    console.log(user.stations.plants)
-    user.stations[payload.station].push(payload.plant);
-
-    User.findOneAndUpdate({username:user.username},{$set:user}, callback);
-
-  })
-
-
-  /*
-  console.log('Adding plant')
-
+module.exports.addPlant = (payload, callback) =>
+{
+    // Get user
+    // Push data to specific station
+    // Return
+    User.findOne({username: payload.user.username}, (err, user) => {
+        let stations = user.stations;
+        let plantToAdd = new Plant(payload.plant);
+        for(var station in user.stations){
+          if(user.stations[station].name === payload.station.name){
+              user.stations[station].plants.push(plantToAdd);
+          }
+        }
+    User.findOneAndUpdate({username: payload.user.username}, {$set: user}, callback);
+})
+      /*
   var plant = payload.plant;
   var stationId = payload.station.id;
   var username = payload.user.username;
@@ -118,13 +101,13 @@ module.exports.addPlant = (payload, callback) => {
           User.update(
             //{ _id: user._id },
             //{ $push: { user.stations } },
-            //{ $push: 
+            //{ $push:
             //  { "stations": {station._id: stationId  { name: plant.name, id: plant.id, slot: plant.slot } } }
-            //}, 
+            //},
             callback
           );
         } else {
-          console.log('Wrong password. \n Try again.')  
+          console.log('Wrong password. \n Try again.')
         }
       });
     } else {

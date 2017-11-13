@@ -44,6 +44,7 @@ exports.userAddStation = function(payload, socket) {
 
 exports.userAddPlant = function(payload, socket) {
 	User.addPlant(payload, (err, success) => {
-		success ? socket.emit('user-add-plant-confirmation', success) : (err) => {throw err};
+		console.log('plant added:', success)
+		//success ? socket.emit('user-add-plant-confirmation', success) : (err) => {throw err};
 	})
 }

@@ -3,13 +3,10 @@ var mongoose = require('mongoose');
 
 // Plant object schema
 var plantSchema = mongoose.Schema({
-    name: String,
-    watering: String,
-    description: String,
-    imgUrl: String,
-    category: String
+    name: { type: String, required: true },
+    slot: {type: String},
+    date: {type: Date, default: Date.now}
 });
-
 // Construct export
 var Plants = module.exports = mongoose.model('Plants', plantSchema);
 
@@ -23,8 +20,16 @@ module.exports.getOnePlant = (id, callback) => {
 }
 
 // Add plant
-module.exports.addPlant = (plant, callback) => {
-    Plants.create(plant, callback);
+module.exports.addPlant = (payload, callback) => {
+
+
+   /* {multi:false, upsert:false, safe:true}
+
+    User.findOneAndUpdate({username: username},
+        { $push:
+           {station.name: stationName} plant }}, {}, callback);
+           */
+
 }
 
 // Remove plant
