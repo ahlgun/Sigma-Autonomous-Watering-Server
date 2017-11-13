@@ -89,6 +89,21 @@ module.exports.addStation = (payload, callback) => {
 
 module.exports.addPlant = (payload, callback) => {
 
+  // Get user 
+    // Push data to stations
+      // Return
+
+  User.findOne({username:payload.user.username}, (err, user) => {
+
+    console.log(user.stations.plants)
+    user.stations[payload.station].push(payload.plant);
+
+    User.findOneAndUpdate({username:user.username},{$set:user}, callback);
+
+  })
+
+
+  /*
   console.log('Adding plant')
 
   var plant = payload.plant;
@@ -100,8 +115,9 @@ module.exports.addPlant = (payload, callback) => {
     if(user) {
       bcrypt.compare(password, user.password, (err, res) => {
         if(res) {
-          User.findOneAndUpdate(
-            { _id: user._id }, 
+          User.update(
+            //{ _id: user._id },
+            //{ $push: { user.stations } },
             //{ $push: 
             //  { "stations": {station._id: stationId  { name: plant.name, id: plant.id, slot: plant.slot } } }
             //}, 
@@ -115,6 +131,8 @@ module.exports.addPlant = (payload, callback) => {
       console.log('User ' + username + ' could not be found.');
     }
   });
+
+  */
 }
 
 

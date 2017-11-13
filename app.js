@@ -63,16 +63,20 @@ io.on('connection', socket => {
 
   socket.on('user-add-station', payload => {
   	SocketHandler.userAddStation(payload, socket);
-  })
+  });
 
   socket.on('user-get-stations', payload => {
   	SocketHandler.userGetStations(payload, socket);
-  })
+  });
 
   socket.on('user-add-plant', payload => {
   	SocketHandler.userAddPlant(payload, socket);
-  })
+  });
 
+
+  socket.on('admin-water-plant', payload => {
+  	socket.emit('chip-water-plant', payload);
+  })
   
 });
 
