@@ -2,12 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7c8a1618-bd8a-4f1b-b36b-7f06f83125c5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/exports/SocketHandler.js" afterPath="$PROJECT_DIR$/src/exports/SocketHandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/models/plant.js" afterPath="$PROJECT_DIR$/src/models/plant.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/models/user.js" afterPath="$PROJECT_DIR$/src/models/user.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/dev/index.html" afterPath="$PROJECT_DIR$/src/routes/dev/index.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -34,7 +28,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="SocketHandler.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="SocketHandler.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/exports/SocketHandler.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="36">
@@ -44,11 +38,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+          <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/routes/dev/index.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="329">
-                  <caret line="128" column="46" lean-forward="true" selection-start-line="128" selection-start-column="46" selection-end-line="128" selection-end-column="46" />
+                <state relative-caret-position="428">
+                  <caret line="28" column="41" lean-forward="false" selection-start-line="28" selection-start-column="41" selection-end-line="28" selection-end-column="41" />
                   <folding />
                 </state>
               </provider>
@@ -107,9 +101,9 @@
         <option value="$PROJECT_DIR$/../Sigma-Autonomous-Watering-Server/src/models/plant.js" />
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/src/exports/SocketHandler.js" />
-        <option value="$PROJECT_DIR$/src/routes/dev/index.html" />
         <option value="$PROJECT_DIR$/src/models/plant.js" />
         <option value="$PROJECT_DIR$/src/models/user.js" />
+        <option value="$PROJECT_DIR$/src/routes/dev/index.html" />
       </list>
     </option>
   </component>
@@ -224,12 +218,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1510584835160</updated>
-      <workItem from="1510584836863" duration="6264000" />
+      <workItem from="1510584836863" duration="6292000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6264000" />
+    <option name="totallyTimeSpent" value="6292000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
@@ -289,14 +283,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/routes/dev/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="128" column="46" lean-forward="true" selection-start-line="128" selection-start-column="46" selection-end-line="128" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/exports/SocketHandler.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
@@ -325,6 +311,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="234">
           <caret line="90" column="4" lean-forward="false" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/dev/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="28" column="41" lean-forward="false" selection-start-line="28" selection-start-column="41" selection-end-line="28" selection-end-column="41" />
           <folding />
         </state>
       </provider>
