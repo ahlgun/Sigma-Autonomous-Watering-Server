@@ -29,10 +29,21 @@ exports.systemLoginUser = function(payload, socket) {
 }
 
 
+exports.userGetStations = function(payload, socket) {
+	User.getStations(payload, (err, success) => {
+		success ? socket.emit('user-get-stations-confirmation', success) : (err) => {throw err};
+	})
+}
 
 
-exports.userAddChip = function(payload, socket) {
-	User.addChip(payload, (err, success) => {
-		success ? socket.emit('user-add-chip-confirmation', success) : (err) => {throw err};
+exports.userAddStation = function(payload, socket) {
+	User.addStation(payload, (err, success) => {
+		success ? socket.emit('user-add-station-confirmation', success) : (err) => {throw err};
+	})
+}
+
+exports.userAddPlant = function(payload, socket) {
+	User.addPlant(payload, (err, success) => {
+		success ? socket.emit('user-add-plant-confirmation', success) : (err) => {throw err};
 	})
 }

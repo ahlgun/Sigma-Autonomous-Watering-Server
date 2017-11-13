@@ -11,6 +11,16 @@
        	    padding:10px;
             margin:5px;
         }
+        button {
+        	background-color:#fff;
+			color:#333;
+			border:2px solid #333;
+        }
+        button:hover {
+        	color:#fff;
+        	background-color:#333;
+        	border:2px solid #fff;
+        }
     </style>
 </head>
 <body>
@@ -40,8 +50,31 @@
 		<button id="removeUserSubmit">Submit</button>
 	</form>
 
+	<form id="addChip">
+		<h2>Add Chip</h2>
+		<input id="addChipUsername" placeholder="Username">
+		<input id="addChipPassword" placeholder="Password">
+		<input id="addChipName" placeholder="Chip Name">
+		<button id="addChipSubmit">Submit</button>
+	</form>
+
+	<form id="addChip">
+		<h2>Add Plant to chip [0]</h2>
+		<input id="addPlantUsername" placeholder="Username">
+		<input id="addPlantPassword" placeholder="Password">
+		<input id="addPlantName" placeholder="Plant name">
+		<input id="addPlantSlot" placeholder="Plant slot">
+		<button id="addChipSubmit">Submit</button>
+	</form>
+
+	<form id="getStations">
+		<h2>Get stations by username</h2>
+		<input id="getStationsUsername" placeholder="Username">
+		<button id="getStationsSubmit">Submit</button>
+	</form>
+
 	<hr/>
-	<h6><a href="../"><button class="btn btn-primary">Go back</button></a></h6>
+	<a href="../"><button>Go back</button></a>
 
 </div>
 
@@ -70,6 +103,50 @@ $(function() {
 	$('#getUsersSubmit').click(() => { 
 		socket.emit('system-get-users', {}); 
 	});
+	$('#addChipSubmit').click(() => {
+		var username = $('#addChipUsername').val();
+		var password = $('#addChipPassword').val();
+		var chipName = $('#addChipName').val();
+		var payload = {
+			station: {
+				name: chipName
+			},
+			user: {
+				username: username,
+				password: password
+			}
+		}
+		socket.emit('user-add-station', payload);
+		return false;
+	});
+
+	$('#addPlantSubmit').click(() => {
+		var payload = {
+			plant: {
+				name: $('#addPlantName').val(),
+				slot: $('#addPlantSlot').val()
+			},
+			station: {
+				name: $('#addPlantChipName').val()
+			},
+			user: {
+				username: $('#addPlantUsername').val(),
+				password: $('#addPlantPassword').val()
+			}
+		}
+		socket.emit('user-add-plant', payload);
+		return false;
+	});
+
+	$('#getStationsSubmit').click(() => {
+		var payload = {
+			user: {
+				username: $('#getStationsUsername').val()
+			}
+		}
+		socket.emit('user-get-stations', payload);
+		return false;
+	});
 
 	socket.on('system-add-user-confirmation', (data) => {
 		console.log('User created: ', data);
@@ -82,6 +159,12 @@ $(function() {
 	});
 	socket.on('system-remove-user-confirmation', (data) => {
 		console.log('User ' + data.username + ' has been removed.');
+	});
+	socket.on('user-add-station-confirmation', (data) => {
+		console.log('Station has been added. ', data);
+	});
+	socket.on('user-get-stations-confirmation', (data) => {
+		console.log('User has stations: ', data);
 	});
 
 });
