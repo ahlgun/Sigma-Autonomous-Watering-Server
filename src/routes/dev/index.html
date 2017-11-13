@@ -150,6 +150,11 @@ $(function() {
 		return false;
 	});
 
+	$('#adminWaterPlant').click(() => {
+		var data = {test:'Hello World!'}
+		socket.emit('admin-water-plant', data)
+	})
+
 	socket.on('system-add-user-confirmation', (data) => {
 		console.log('User created: ', data);
 	});
