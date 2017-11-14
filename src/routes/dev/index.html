@@ -95,7 +95,7 @@ $(function() {
     $('#getStationbyKeySubmit').click(() => {
         console.log('fetching')
         var chipKey = $('#getStationByKeyInput').val();
-        var request = new Request('https://localhost:8080/api/getStation', {
+        var request = new Request('http://localhost:3000/api/getStation', {
             method: 'POST',
             body: JSON.stringify({key: chipKey}),
             mode: "cors",
@@ -106,7 +106,7 @@ $(function() {
         });
         fetch(request)
             .then(function (response) {
-                console.log(response)
+                console.log(response.text())
             })
             .catch(function (error) {
                 console.log(error)

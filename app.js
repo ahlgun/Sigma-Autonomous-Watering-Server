@@ -97,8 +97,11 @@ app.post('/api/getStation', (req, res) => {
   var payload = req.body;
   User.chipGetStation(payload, (station) => {
 
+        station ?
+                res.send(station)
 
-                console.log('will return: ', station)
+            :
+            console.log('Something went wrong')
 
   })
 })
