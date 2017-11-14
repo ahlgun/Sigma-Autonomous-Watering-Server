@@ -1,3 +1,12 @@
-## Sigma Autonomous Watering
+## Sigma Autonomous Watering Server Side
 
-#### By Niklas & GUnnar
+#### By Niklas & Gunnar
+
+#### Server side functions:
+
+##### chipGetStations:
+      Endpoint: /api/getStation,
+      Payload: {key: chipKey},
+      Response: {...station}.
+
+-----------------------------------------------------------------------------------------------------
