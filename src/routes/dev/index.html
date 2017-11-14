@@ -51,10 +51,11 @@
 	</form>
 
 	<form id="addChip">
-		<h2>Add Chip</h2>
+		<h2>Add Station</h2>
 		<input id="addChipUsername" placeholder="Username">
 		<input id="addChipPassword" placeholder="Password">
 		<input id="addChipName" placeholder="Chip Name">
+		<input id="addChipKey" placeholder="Chip Key">
 		<button id="addChipSubmit">Submit</button>
 	</form>
 
@@ -73,6 +74,13 @@
 		<button id="getStationsSubmit">Submit</button>
 	</form>
 
+	<form id="getStation">
+		<h2>Get a station by key</h2>
+		<input id="getStationByKeyInput" placeholder="Key">
+		<button id="getStationbyKeySubmit">Submit</button>
+	</form
+
+
 	<button id="adminWaterPlant"></button>
 
 	<hr/>
@@ -84,6 +92,22 @@
 $(function() {
 
 	var socket = io();
+
+    $('#getStationbyKeySubmit').click(() => {
+        let getStationReq = new XMLHttpRequest();
+        getStationReq.open('POST', 'http://localhost:3000/api/getStation',  false);
+        getStationReq.setRequestHeader("Content-Type", "application/json");
+        getStationReq.onreadystatechange = function () {
+            console.log('onreadystatechange')
+            if (this.readyState === 4 && this.status === 200) {
+                filteredList = JSON.parse( getStationReq.response);
+                console.log(filteredList)
+            }
+        };
+        var chipKey = $('#getStationByKeyInput').val();
+        getStationReq.send(JSON.stringify({key: chipKey}));
+        return false;
+    });
 
 	$('#createUserSubmit').click(() => {
 		var username = $('#createUsername').val();
@@ -109,9 +133,11 @@ $(function() {
 		var username = $('#addChipUsername').val();
 		var password = $('#addChipPassword').val();
 		var chipName = $('#addChipName').val();
+        var chipKey = $('#addChipKey').val();
 		var payload = {
 			station: {
-				name: chipName
+				name: chipName,
+				key: chipKey
 			},
 			user: {
 				username: username,

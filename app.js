@@ -1,4 +1,6 @@
 'use strict';
+//Require user model. Needed for chip requests.
+var User = require('./src/models/user.js');
 
 /* Express + Express-session */
 var app = require('express')();
@@ -8,12 +10,17 @@ var session = require('express-session');
 var http = require('http').Server( app );
 var io = require('socket.io')( http, { wsEngine: 'ws' } );
 var sharedsession = require("express-socket.io-session");
-http://localhost
+
 /* MongoDB + Mongoose */
 var mongoose = require('mongoose'); mongoose.connect('mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering', {useMongoClient:true});
 
 /* Uuid Generator */
 const uuidv4 = require('uuid/v4');
+
+/*----- Make app use body query parser ----- */
+var bodyParser = require('body-parser');
+var jsonParser = bodyParser.json({ type: 'application/json' });
+app.use(jsonParser);
 
 /* Express settings */
 app.set('port', (process.env.PORT || 3000));
@@ -80,12 +87,22 @@ io.on('connection', socket => {
   
 });
 
-/* Express server + routes */
+/* CHIP REQUESTS*/
 app.get('/',                  (req, res) => { res.sendFile("./src/routes/client/index.html", {root:__dirname}); });
 app.get('/dev',               (req, res) => { /*console.log(req.session);*/ res.sendFile("./src/routes/dev/index.html", {root:__dirname});});
-app.get('/api/plants',        (req, res) => { Plants.getPlants((err, data) => {data ? res.json(data) : (err) => {throw err}; });});
-app.get('/api',               (req, res) => { res.sendFile("./src/routes/api/index.html",  {root:__dirname}); });
-app.get('/api/plants/add',    (req, res) => { res.sendFile("./src/routes/api/add.html",    {root:__dirname}); });
-app.get('/api/plants/edit',   (req, res) => { res.sendFile("./src/routes/api/edit.html",   {root:__dirname}); });
-app.get('/api/plants/remove', (req, res) => { res.sendFile("./src/routes/api/remove.html", {root:__dirname}); });
+app.get('/api/plants/postmeasurements',    (req, res) => { res.sendFile("./src/routes/api/add.html",    {root:__dirname}); });
+
+app.post('/api/getStation', (req, res) => {
+  //req.body = {key: "key"}
+  var payload = req.body;
+  User.chipGetStation(payload, (station) => {
+
+
+                console.log('will return: *')
+
+  })
+})
+
+
+//------START APP ON PORT (port)--------//
 http.listen(app.get('port'),  () => { console.log('Node app is running on port', app.get('port')); });

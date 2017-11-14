@@ -7,18 +7,13 @@ var Plant = require('./../models/plant.js');
 /*   User(username, password) > [station](name, id) > [Plants](name, id, slot) > [Measurements](time, value)   */
 
 var userSchema = mongoose.Schema({
- 
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-
   stations: [{
-    
-    name: { type: String, required: true },
-
-    plants: []
-
+      name: { type: String, required: true },
+      key: {type: String, required: true},
+      plants: []
   }]
-
 });
 
 var User = module.exports = mongoose.model('User', userSchema);
@@ -44,30 +39,24 @@ module.exports.getStation = (payload, callback) => {
 }
 
 module.exports.addStation = (payload, callback) =>{
-
       console.log('Adding station')
-
-      var stationName = payload.station.name;
+      var station = payload.station;
       var username = payload.user.username;
       var password = payload.user.password;
-
       User.findOne({username: username}, (err, user) => {
           if(user) {
-
               User.update(
                   {_id: user._id},
                   {
                       $push:
                           {
                               stations:
-                                  {name: stationName}
+                                  station
                           }
                   },
                   callback
               );
               console.log('Added station')
-
-
           };
   })
 }
@@ -88,45 +77,9 @@ module.exports.addPlant = (payload, callback) =>
         }
     User.findOneAndUpdate({username: payload.user.username}, {$set: user}, callback);
 })
-      /*
-  var plant = payload.plant;
-  var stationId = payload.station.id;
-  var username = payload.user.username;
-  var password = payload.user.password;
-
-  User.findOne({username:username}, (err, user) => {
-    if(user) {
-      bcrypt.compare(password, user.password, (err, res) => {
-        if(res) {
-          User.update(
-            //{ _id: user._id },
-            //{ $push: { user.stations } },
-            //{ $push:
-            //  { "stations": {station._id: stationId  { name: plant.name, id: plant.id, slot: plant.slot } } }
-            //},
-            callback
-          );
-        } else {
-          console.log('Wrong password. \n Try again.')
-        }
-      });
-    } else {
-      console.log('User ' + username + ' could not be found.');
-    }
-  });
-
-  */
 }
 
-
-
-
-
-
-
-
-
-module.exports.getUsers = (payload, callback) =>   { 
+module.exports.getUsers = (payload, callback) =>   {
   User.find(callback).limit(payload.limit); 
 }
 
@@ -151,7 +104,7 @@ module.exports.addUser = function(payload, callback) {
   });
 }
 
-module.exports.loginUser = (payload, callback) =>  { 
+module.exports.loginUser = (payload, callback) =>  {
   User.findOne({username:payload.username}, (err, user) => {
     if(user) {
       bcrypt.compare(payload.password, user.password, (err, res) => {
@@ -172,7 +125,42 @@ module.exports.loginUser = (payload, callback) =>  {
 
 
 
-module.exports.addstationMeasurement = (payload, callback) => {
+
+//-------------CHIP REQUESTS----------------//
+
+module.exports.chipInitializeStation = (payload, callback) =>  {
+    User.find({"stations":{"$elemMatch":{"key": payload.station.key}}},
+        (err, success) => {
+            if(success){
+                for(var station in success.stations) {
+                    if (station.key === payload) {
+                        callback(success.stations[station]);
+                    }
+                }
+            }
+        }
+    )
+}
+
+module.exports.chipGetStation = (payload, callback) =>  {
+    User.find({"stations":{"$elemMatch":{"key": payload.key}}},
+        (err, success) => {
+
+            if(success){
+                for(var station in success[0].stations) {
+                    if (success[0].stations[station].key === payload.key) {
+
+                        callback(success[0].stations[station])
+                    }
+                }
+            }
+        }
+    )
+}
+
+
+module.exports.chipAddStationMeasurement = (payload, callback) => {
 
 }
+
 
