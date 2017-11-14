@@ -26,7 +26,7 @@
 <body>
 <div class="container text-center">
 
-	<br/><h3>Dev last updated 13/11 18.27</h3><hr/>
+	<br/><h3>Dev, last updated 14/11 21.35</h3><hr/>
 	<button id="getUsersSubmit">Get users</button>
 	<hr/>
 
@@ -95,9 +95,10 @@ $(function() {
     $('#getStationbyKeySubmit').click(() => {
         console.log('fetching')
         var chipKey = $('#getStationByKeyInput').val();
-        var request = new Request('https://localhost/api/getStation', {
+        var request = new Request('https://sigma-itc-watering.herokuapp.com/api/getStation', {
             method: 'POST',
             body: JSON.stringify({key: chipKey}),
+            mode: "cors",
             headers: new Headers({
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
@@ -105,8 +106,11 @@ $(function() {
         });
         fetch(request)
             .then(function (response) {
-                console.log(response.text())
+                return response.json()
             })
+			.then((data) => {
+				console.log(data)
+				})
             .catch(function (error) {
                 console.log(error)
 				})
