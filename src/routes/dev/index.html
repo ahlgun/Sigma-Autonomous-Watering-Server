@@ -95,7 +95,7 @@ $(function() {
     $('#getStationbyKeySubmit').click(() => {
         console.log('fetching')
         var chipKey = $('#getStationByKeyInput').val();
-        var request = new Request('https://sigma-itc-watering.herokuapp.com/api/getStation', {
+        var request = new Request('https://localhost:8080/api/getStation', {
             method: 'POST',
             body: JSON.stringify({key: chipKey}),
             mode: "cors",
