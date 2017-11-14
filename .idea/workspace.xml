@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7c8a1618-bd8a-4f1b-b36b-7f06f83125c5" name="Default" comment="" />
+    <list default="true" id="7c8a1618-bd8a-4f1b-b36b-7f06f83125c5" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/dev/index.html" afterPath="$PROJECT_DIR$/src/routes/dev/index.html" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -17,7 +19,7 @@
     <splitter split-orientation="horizontal" split-proportion="0.5223555">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-          <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="389">
@@ -37,11 +39,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+          <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/routes/dev/index.html">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="212">
-                  <caret line="97" column="56" lean-forward="true" selection-start-line="97" selection-start-column="56" selection-end-line="97" selection-end-column="71" />
+                  <caret line="97" column="76" lean-forward="true" selection-start-line="97" selection-start-column="76" selection-end-line="97" selection-end-column="76" />
                   <folding />
                 </state>
               </provider>
@@ -125,8 +127,8 @@
         <option value="$PROJECT_DIR$/../../../carBooking/carBooking/src/reducers/carsReducer.js" />
         <option value="$PROJECT_DIR$/src/models/user.js" />
         <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/src/routes/dev/index.html" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/routes/dev/index.html" />
       </list>
     </option>
   </component>
@@ -231,12 +233,12 @@
       <updated>1510584835160</updated>
       <workItem from="1510584836863" duration="7193000" />
       <workItem from="1510663401874" duration="6521000" />
-      <workItem from="1510684481171" duration="2642000" />
+      <workItem from="1510684481171" duration="3150000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16356000" />
+    <option name="totallyTimeSpent" value="16864000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -421,7 +423,7 @@
         <state relative-caret-position="115">
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -430,14 +432,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
           <caret line="185" column="20" lean-forward="false" selection-start-line="185" selection-start-column="20" selection-end-line="204" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/routes/dev/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="97" column="56" lean-forward="true" selection-start-line="97" selection-start-column="56" selection-end-line="97" selection-end-column="71" />
           <folding />
         </state>
       </provider>
@@ -454,6 +448,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="389">
           <caret line="94" column="43" lean-forward="true" selection-start-line="94" selection-start-column="43" selection-end-line="94" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/dev/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="97" column="76" lean-forward="true" selection-start-line="97" selection-start-column="76" selection-end-line="97" selection-end-column="76" />
           <folding />
         </state>
       </provider>
