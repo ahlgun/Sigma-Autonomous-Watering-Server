@@ -84,6 +84,10 @@ io.on('connection', socket => {
   	SocketHandler.userAddPlant(payload, socket);
   });
 
+    socket.on('user-remove-one-plant', payload => {
+        SocketHandler.userRemoveOnePlant(payload, socket);
+    });
+
   socket.on('user-get-one-plant', payload => {
       SocketHandler.userGetOnePlant(payload, socket);
   });

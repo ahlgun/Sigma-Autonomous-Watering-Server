@@ -19,7 +19,8 @@ var userSchema = mongoose.Schema({
                   imgUrl: { type: String, required: false },
                   category: { type: String, required: false },
                   description: { type: String, required: false },
-                  slot: { type: Number, required: false }
+                  slot: { type: Number, required: false },
+                  date: {type: Date, default: Date()}
               }
           ]
      }
@@ -47,14 +48,11 @@ module.exports.getStations = (payload, callback) => {
 module.exports.getOneStation = (payload, callback) => {
     var username = payload.user.username;
     var stationName = payload.station.name;
-    console.log(payload)
     User.findOne({username:username}, (err, user) => {
         if(user) {
-            console.log(user.stations)
             if(user.stations !== null || user.stations.length === 0) {
                 for(var station in user.stations){
                     if(user.stations[station].name === stationName){
-                        console.log(user.stations[station], '=the station')
                         callback(null, user.stations[station])
                     }
                 }
@@ -98,7 +96,7 @@ module.exports.addPlant = (payload, callback) => {
     // Return
     User.findOne({username: payload.user.username}, (err, user) => {
         let stations = user.stations;
-        let plantToAdd = new Plant(payload.plant);
+        let plantToAdd = payload.plant;
         for(var station in user.stations){
           if(user.stations[station].name === payload.station.name){
               user.stations[station].plants.push(plantToAdd);
@@ -107,6 +105,27 @@ module.exports.addPlant = (payload, callback) => {
     User.findOneAndUpdate({username: payload.user.username}, {$set: user}, callback);
 })
 }
+
+module.exports.removeOnePlant = (payload, callback) => {
+    let plantName = payload.plant.name;
+    let stationName = payload.station.name;
+    let username = payload.user.username;
+    User.findOne({username: username}, (err, user) => {
+        let stations = user.stations;
+        for(var station in stations){
+            if(stations[station].name === stationName){
+                        let updatedPlantsList = stations[station].plants.filter((plant) => {
+                            return plant.name !== plantName;
+                        })
+                user.stations[station].plants = updatedPlantsList;
+                console.log(updatedPlantsList, '=updatedList')
+                }
+            }
+        User.findOneAndUpdate({username: payload.user.username}, {$set: user}, callback);
+        })
+    }
+
+
 
 module.exports.getUsers = (payload, callback) =>   {
   User.find(callback).limit(payload.limit); 
