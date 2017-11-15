@@ -76,8 +76,16 @@ io.on('connection', socket => {
   	SocketHandler.userGetStations(payload, socket);
   });
 
+    socket.on('user-get-one-station', payload => {
+        SocketHandler.userGetOneStation(payload, socket);
+    });
+
   socket.on('user-add-plant', payload => {
   	SocketHandler.userAddPlant(payload, socket);
+  });
+
+  socket.on('user-get-one-plant', payload => {
+      SocketHandler.userGetOnePlant(payload, socket);
   });
 
 
@@ -96,10 +104,12 @@ app.post('/api/getStation', (req, res) => {
   //req.body = {key: "key"}
   var payload = req.body;
   User.chipGetStation(payload, (station) => {
-
-                console.log('will return: *')
+        station ?
+                res.send(station)
+            :
+            console.log('Station not found.')
   })
-})
+});
 
 
 //------START APP ON PORT (port)--------//

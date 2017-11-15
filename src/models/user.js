@@ -9,11 +9,21 @@ var Plant = require('./../models/plant.js');
 var userSchema = mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  stations: [{
-      name: { type: String, required: true },
-      key: {type: String, required: true},
-      plants: []
-  }]
+  stations: [
+      {
+          name: { type: String, required: true },
+          key: {type: String, required: true},
+          plants: [
+              {
+                  name: { type: String, required: true },
+                  imgUrl: { type: String, required: false },
+                  category: { type: String, required: false },
+                  description: { type: String, required: false },
+                  slot: { type: Number, required: false }
+              }
+          ]
+     }
+  ]
 });
 
 var User = module.exports = mongoose.model('User', userSchema);
@@ -34,9 +44,29 @@ module.exports.getStations = (payload, callback) => {
   })
 }
 
-module.exports.getStation = (payload, callback) => {
-  var username = payload.user.username;
+module.exports.getOneStation = (payload, callback) => {
+    var username = payload.user.username;
+    var stationName = payload.station.name;
+    console.log(payload)
+    User.findOne({username:username}, (err, user) => {
+        if(user) {
+            console.log(user.stations)
+            if(user.stations !== null || user.stations.length === 0) {
+                for(var station in user.stations){
+                    if(user.stations[station].name === stationName){
+                        console.log(user.stations[station], '=the station')
+                        callback(null, user.stations[station])
+                    }
+                }
+            } else {
+                callback(null, 'User has no stations, or the stations directory is prohibited.')
+            }
+        } else {
+            callback(null, 'User could not be found.');
+        }
+    })
 }
+
 
 module.exports.addStation = (payload, callback) =>{
       console.log('Adding station')
@@ -62,8 +92,7 @@ module.exports.addStation = (payload, callback) =>{
 }
 
 
-module.exports.addPlant = (payload, callback) =>
-{
+module.exports.addPlant = (payload, callback) => {
     // Get user
     // Push data to specific station
     // Return
@@ -91,6 +120,7 @@ module.exports.removeUser = (payload, callback) => {
 }
 
 module.exports.addUser = function(payload, callback) {
+    console.log(payload)
   var username = payload.username;
   var password = payload.password;
   /* User.findOne({username:username}, (err, user) => {
@@ -145,11 +175,10 @@ module.exports.chipInitializeStation = (payload, callback) =>  {
 module.exports.chipGetStation = (payload, callback) =>  {
     User.find({"stations":{"$elemMatch":{"key": payload.key}}},
         (err, success) => {
-
+        var user = success [0];
             if(success){
                 for(var station in success[0].stations) {
                     if (success[0].stations[station].key === payload.key) {
-
                         callback(success[0].stations[station])
                     }
                 }

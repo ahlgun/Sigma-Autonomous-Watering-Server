@@ -26,7 +26,7 @@
 <body>
 <div class="container text-center">
 
-	<br/><h3>Dev last updated 13/11 18.27</h3><hr/>
+	<br/><h3>Dev, last updated 15/11 17.18</h3><hr/>
 	<button id="getUsersSubmit">Get users</button>
 	<hr/>
 
@@ -74,11 +74,10 @@
 		<button id="getStationsSubmit">Submit</button>
 	</form>
 
-	<form id="getStation">
+
 		<h2>Get a station by key</h2>
 		<input id="getStationByKeyInput" placeholder="Key">
 		<button id="getStationbyKeySubmit">Submit</button>
-	</form
 
 
 	<button id="adminWaterPlant"></button>
@@ -94,20 +93,30 @@ $(function() {
 	var socket = io();
 
     $('#getStationbyKeySubmit').click(() => {
-        let getStationReq = new XMLHttpRequest();
-        getStationReq.open('POST', 'http://localhost:3000/api/getStation',  false);
-        getStationReq.setRequestHeader("Content-Type", "application/json");
-        getStationReq.onreadystatechange = function () {
-            console.log('onreadystatechange')
-            if (this.readyState === 4 && this.status === 200) {
-                filteredList = JSON.parse( getStationReq.response);
-                console.log(filteredList)
-            }
-        };
+        console.log('fetching')
         var chipKey = $('#getStationByKeyInput').val();
-        getStationReq.send(JSON.stringify({key: chipKey}));
-        return false;
+        var request = new Request('https://sigma-itc-watering.herokuapp.com/api/getStation', {
+            method: 'POST',
+            body: JSON.stringify({key: chipKey}), //chipKey = a string with chips key
+            mode: "cors",
+            headers: new Headers({
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            })
+        });
+        fetch(request)
+            .then(function (response) {
+                return response.json()
+            })
+				.then((data) => {
+            		//data = station object.
+					console.log(data)
+					})
+            .catch(function (error) {
+                console.log(error)
+				})
     });
+
 
 	$('#createUserSubmit').click(() => {
 		var username = $('#createUsername').val();
