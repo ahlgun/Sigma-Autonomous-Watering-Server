@@ -76,6 +76,10 @@ io.on('connection', socket => {
   	SocketHandler.userGetStations(payload, socket);
   });
 
+    socket.on('user-get-one-station', payload => {
+        SocketHandler.userGetOneStation(payload, socket);
+    });
+
   socket.on('user-add-plant', payload => {
   	SocketHandler.userAddPlant(payload, socket);
   });

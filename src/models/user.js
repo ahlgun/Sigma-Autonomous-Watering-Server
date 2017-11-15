@@ -34,9 +34,29 @@ module.exports.getStations = (payload, callback) => {
   })
 }
 
-module.exports.getStation = (payload, callback) => {
-  var username = payload.user.username;
+module.exports.getOneStation = (payload, callback) => {
+    var username = payload.user.username;
+    var stationName = payload.station.name;
+    console.log(payload)
+    User.findOne({username:username}, (err, user) => {
+        if(user) {
+            console.log(user.stations)
+            if(user.stations !== null || user.stations.length === 0) {
+                for(var station in user.stations){
+                    if(user.stations[station].name === stationName){
+                        console.log(user.stations[station], '=the station')
+                        callback(null, user.stations[station])
+                    }
+                }
+            } else {
+                callback(null, 'User has no stations, or the stations directory is prohibited.')
+            }
+        } else {
+            callback(null, 'User could not be found.');
+        }
+    })
 }
+
 
 module.exports.addStation = (payload, callback) =>{
       console.log('Adding station')
