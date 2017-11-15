@@ -121,7 +121,10 @@ module.exports.removeOnePlant = (payload, callback) => {
                 console.log(updatedPlantsList, '=updatedList')
                 }
             }
-        User.findOneAndUpdate({username: payload.user.username}, {$set: user}, callback);
+        User.findOneAndUpdate({username: payload.user.username}, {$set: user}, (err, user) =>
+        {
+            User.findOne({username: username}, callback(null, user.stations));
+        })
         })
     }
 

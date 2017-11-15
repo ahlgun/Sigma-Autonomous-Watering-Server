@@ -59,8 +59,7 @@ exports.userAddPlant = function(payload, socket) {
 
 exports.userRemoveOnePlant = function(payload, socket) {
     User.removeOnePlant(payload, (err, success) => {
-        console.log('plant removed:', success)
-        success ? socket.emit('user-remove-plant-confirmation', success) : (err) => {throw err};
+        success ? socket.emit('user-remove-plant-one-confirmation', success) : (err) => {throw err};
     })
 }
 
