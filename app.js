@@ -72,6 +72,10 @@ io.on('connection', socket => {
   	SocketHandler.userAddStation(payload, socket);
   });
 
+  socket.on('user-delete-one-station', payload => {
+        SocketHandler.userDeleteOneStation(payload, socket);
+});
+
   socket.on('user-get-stations', payload => {
   	SocketHandler.userGetStations(payload, socket);
   });

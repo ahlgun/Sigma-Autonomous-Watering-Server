@@ -89,6 +89,30 @@ module.exports.addStation = (payload, callback) =>{
   })
 }
 
+module.exports.deleteOneStation = (payload, callback) => {
+    var username = payload.user.username;
+    let stationName = payload.station.name;
+    User.findOne({username: username}, (err, user) => {
+        if(user) {
+            console.log(user, '=sersdjfgkhsdgf')
+            let stations = user.stations;
+            for(var station in user.stations){
+                console.log(station)
+
+                    stations = user.stations.filter((station) => {
+                        return station.name !== stationName;
+                    })
+                    user.stations = stations;
+
+            }
+            User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
+            {
+                User.findOne({username: username}, callback(null, user.stations));
+            })
+        };
+    })
+}
+
 
 module.exports.addPlant = (payload, callback) => {
     // Get user
