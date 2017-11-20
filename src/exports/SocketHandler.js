@@ -7,6 +7,7 @@ var User = require('./../models/user.js');
 exports.systemAddUser = function(payload, socket) {
 	console.log(payload, '=payload')
 	User.addUser(payload, (err, success) => {
+		console.log('success created user:', success)
   	success ? socket.emit('system-add-user-confirmation', success) : (err) => {throw err}; 
 	});
 }

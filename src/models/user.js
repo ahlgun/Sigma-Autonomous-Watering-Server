@@ -27,6 +27,7 @@ var userSchema = mongoose.Schema({
   ]
 });
 
+
 var User = module.exports = mongoose.model('User', userSchema);
 
 
@@ -155,7 +156,9 @@ module.exports.removeOnePlant = (payload, callback) => {
 
 
 module.exports.getUsers = (payload, callback) =>   {
-  User.find(callback).limit(payload.limit); 
+    console.log('get users')
+    User.find(callback);
+
 }
 
 module.exports.removeUser = (payload, callback) => { 
@@ -165,17 +168,33 @@ module.exports.removeUser = (payload, callback) => {
   ); 
 }
 
-module.exports.addUser = function(payload, callback) {
+module.exports.addUser = (payload, callback) => {
     console.log(payload)
   var username = payload.username;
   var password = payload.password;
   /* User.findOne({username:username}, (err, user) => {
     if(user) {callback('User already exists')}
   }) */
+    User.create({username: username, password: password}, (err, user) => {
+        if(user) {
+            console.log('sdgsdgsdg', user)
+        }
+    });
   bcrypt.hash(password, saltRounds, (err, hash) => {
     if(!err) {
       password = hash;
-      User.create({username:username, password:password}, callback);
+      var userObject = {username: username, password: password}
+      var newUser = new User();
+      newUser.username = username;
+      newUser.password = password;
+      newUser.save(function(err, user){
+          console.log(newUser, '======newUser')
+
+          console.log(user, 'dfsdfsdfsdf999999999999999999')
+      })
+      //console.log(newUser, '=newUser')
+
+      console.log('will create')
     } else {console.log(err)};
   });
 }
