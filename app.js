@@ -12,7 +12,11 @@ var io = require('socket.io')( http, { wsEngine: 'ws' } );
 var sharedsession = require("express-socket.io-session");
 
 /* MongoDB + Mongoose */
-var mongoose = require('mongoose'); mongoose.connect('mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering', {useMongoClient:true});
+var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+//mongoose.connect('mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering', {useMongoClient:true});
+
+mongoose.connect('mongodb://localhost/sigma-watering', {useMongoClient:true});
 
 /* Uuid Generator */
 const uuidv4 = require('uuid/v4');
@@ -36,7 +40,7 @@ app.use(session({
   genid: function(req) {
     return uuidv4() 
   },
-}))
+}));
 
 /*
 io.use(sharedsession(session, {
@@ -55,49 +59,49 @@ io.on('connection', socket => {
   // console.log(socket.handshake.headers.cookie)
 
   // Login user through socket.session;
-  socket.on('system-add-user', payload => {
-  	SocketHandler.systemAddUser(payload, socket);
+    app.post('/api/system-add-user', (req, res) => {
+  	SocketHandler.systemAddUser(req, res);
   });
-  socket.on('system-get-users', payload => {
-  	SocketHandler.systemGetUsers(payload, socket);
+  app.post('/api/system-get-users', (req, res) => {
+  	SocketHandler.systemGetUsers(req, res);
   });
-  socket.on('system-remove-user', payload => {
-    SocketHandler.systemRemoveUser(payload, socket);
+  app.post('/api/system-remove-user', (req, res) => {
+    SocketHandler.systemRemoveUser(req, res);
   });
-  socket.on('system-login-user', payload => {
-    SocketHandler.systemLoginUser(payload, socket);
-  });
-
-  socket.on('user-add-station', payload => {
-  	SocketHandler.userAddStation(payload, socket);
+  app.post('/api/system-login-user', (req, res) => {
+    SocketHandler.systemLoginUser(req, res);
   });
 
-  socket.on('user-delete-one-station', payload => {
-        SocketHandler.userDeleteOneStation(payload, socket);
+    app.post('/api/user-add-station', (req, res) => {
+        SocketHandler.userAddStation(req, res);
+    });
+
+  app.post('/api/user-delete-one-station', (req, res) => {
+        SocketHandler.userDeleteOneStation(req, res);
 });
 
-  socket.on('user-get-stations', payload => {
-  	SocketHandler.userGetStations(payload, socket);
+    app.post('/api/user-get-stations', (req, res) => {
+  	SocketHandler.userGetStations(req, res);
   });
 
-    socket.on('user-get-one-station', payload => {
-        SocketHandler.userGetOneStation(payload, socket);
+    app.post('/api/user-get-one-station', (req, res) => {
+        SocketHandler.userGetOneStation(req, res);
     });
 
-  socket.on('user-add-plant', payload => {
-  	SocketHandler.userAddPlant(payload, socket);
+  app.post('/api/user-add-plant', (req, res) => {
+  	SocketHandler.userAddPlant(req, res);
   });
 
-    socket.on('user-remove-one-plant', payload => {
-        SocketHandler.userRemoveOnePlant(payload, socket);
+    app.post('/api/user-remove-one-plant', (req, res) => {
+        SocketHandler.userRemoveOnePlant(req, res);
     });
 
-  socket.on('user-get-one-plant', payload => {
-      SocketHandler.userGetOnePlant(payload, socket);
+  app.post('/api/user-get-one-plant', (req, res) => {
+      SocketHandler.userGetOnePlant(req, res);
   });
 
 
-  socket.on('admin-water-plant', payload => {
+  app.post('/api/admin-water-plant', (req, res) => {
   	socket.emit('chip-water-plant', payload);
   })
   

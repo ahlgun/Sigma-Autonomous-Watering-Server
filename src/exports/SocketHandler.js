@@ -4,27 +4,27 @@ var User = require('./../models/user.js');
 
 
 /*----------------------AUTHENTICATION----------------------------*/
-exports.systemAddUser = function(payload, socket) {
-	console.log(payload, '=payload')
+exports.systemAddUser = function(req, res) {
+	var payload = req.body;
 	User.addUser(payload, (err, success) => {
 		console.log('success created user:', success)
-  	success ? socket.emit('system-add-user-confirmation', success) : (err) => {throw err}; 
+  	success ? res.send(success) : (err) => {throw err};
 	});
 }
 
-exports.systemGetUsers = function(payload, socket) {
+exports.systemGetUsers = function(req, res) {
 	User.getUsers(payload, (err, success) => {
   	success ? socket.emit('system-get-users-confirmation', success) : (err) => {throw err}; 
 	});
 }
 
-exports.systemRemoveUser = function(payload, socket) {
+exports.systemRemoveUser = function(req, res) {
   User.removeUser(payload, (err, success) => {
   	success ? socket.emit('system-remove-user-confirmation', success) : (err) => {throw err}; 
   });
 }
 
-exports.systemLoginUser = function(payload, socket) {
+exports.systemLoginUser = function(req, res) {
 	User.loginUser(payload, (err, success) => {
   	success ? socket.emit('system-login-user-confirmation', success) : (err) => {throw err};
 	});
@@ -33,46 +33,54 @@ exports.systemLoginUser = function(payload, socket) {
 
 /*----------------------CLIENT SIDE REQUESTS---------------------------*/
 
-exports.userGetStations = function(payload, socket) {
-	User.getStations(payload, (err, success) => {
-		success ? socket.emit('user-get-stations-confirmation', success) : (err) => {throw err};
-	})
+exports.userAddStation = function(req, res) {
+    var payload = req.body;
+    User.addStation(payload, (err, success) => {
+        success ? res.send(success) : (err) => {throw err}
+    })
 }
 
-exports.userGetOneStation = function(payload, socket) {
+
+exports.userGetStations = function(req, res) {
+	console.log('getting stations')
+    var payload = req.body;
+    User.getStations(payload, (err, success) => {
+        success ? res.send(success) : (err) => {throw err}
+    })
+}
+
+exports.userGetOneStation = function(req, res) {
+    var payload = req.body;
     User.getOneStation(payload, (err, success) => {
-        success ? socket.emit('user-get-one-station-confirmation', success) : (err) => {throw err};
+        success ? res.send(success) : (err) => {throw err}
     })
 }
 
-exports.userAddStation = function(payload, socket) {
-	User.addStation(payload, (err, success) => {
-		success ? socket.emit('user-add-station-confirmation', success) : (err) => {throw err};
-	})
-}
 
-exports.userDeleteOneStation = function(payload, socket) {
+exports.userDeleteOneStation = function(req, res) {
+    var payload = req.body;
     User.deleteOneStation(payload, (err, success) => {
-        success ? socket.emit('user-delete-one-station-confirmation', success) : (err) => {throw err};
+        success ? res.send(success) : (err) => {throw err}
     })
 }
 
-exports.userAddPlant = function(payload, socket) {
-	User.addPlant(payload, (err, success) => {
-		console.log('plant added:', success)
-		success ? socket.emit('user-add-plant-confirmation', success) : (err) => {throw err};
-	})
+exports.userAddPlant = function(req, res) {
+    var payload = req.body;
+    User.addPlant(payload, (err, success) => {
+        success ? res.send(success) : (err) => {throw err}
+    })
 }
 
-exports.userRemoveOnePlant = function(payload, socket) {
+exports.userRemoveOnePlant = function(req, res) {
+    var payload = req.body;
     User.removeOnePlant(payload, (err, success) => {
-        success ? socket.emit('user-remove-plant-one-confirmation', success) : (err) => {throw err};
+        success ? res.send(success) : (err) => {throw err}
     })
 }
 
-exports.userGetOnePlant = function(payload, socket) {
+exports.userGetOnePlant = function(req, res) {
+    var payload = req.body;
     User.getOnePlant(payload, (err, success) => {
-		//console.log(success, 'Success: ')
-        success ? socket.emit('user-get-one-plant-confirmation', success) : (err) => {throw err};
+        success ? res.send(success) : (err) => {throw err}
     })
 }

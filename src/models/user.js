@@ -67,27 +67,19 @@ module.exports.getOneStation = (payload, callback) => {
 }
 
 
-module.exports.addStation = (payload, callback) =>{
-      console.log('Adding station')
+module.exports.addStation = (payload, callback) => {
+      console.log('Adding station: ', payload.station)
       var station = payload.station;
       var username = payload.user.username;
       var password = payload.user.password;
-      User.findOne({username: username}, (err, user) => {
-          if(user) {
-              User.update(
-                  {_id: user._id},
-                  {
-                      $push:
-                          {
-                              stations:
-                                  station
-                          }
-                  },
-                  callback
-              );
-              console.log('Added station')
-          };
-  })
+    User.findOne({username: username}, (err, user) => {
+        user.stations.push(station)
+
+        User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
+        {
+            console.log(user, '=addStationUserdfmdskf')
+        })
+    })
 }
 
 module.exports.deleteOneStation = (payload, callback) => {
@@ -169,34 +161,22 @@ module.exports.removeUser = (payload, callback) => {
 }
 
 module.exports.addUser = (payload, callback) => {
-    console.log(payload)
-  var username = payload.username;
-  var password = payload.password;
-  /* User.findOne({username:username}, (err, user) => {
-    if(user) {callback('User already exists')}
-  }) */
-    User.create({username: username, password: password}, (err, user) => {
-        if(user) {
-            console.log('sdgsdgsdg', user)
-        }
+    var username = payload.username;
+    var password = payload.password;
+    /* User.findOne({username:username}, (err, user) => {
+      if(user) {callback('User already exists')}
+    }) */
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        if(!err) {
+            password = hash;
+            var userObject = {username: username, password: password};
+            var newUser = new User();
+            User.create(newUser, callback)
+            newUser.username = username;
+            newUser.password = password;
+            //newUser.save();
+        } else {console.log(err)};
     });
-  bcrypt.hash(password, saltRounds, (err, hash) => {
-    if(!err) {
-      password = hash;
-      var userObject = {username: username, password: password}
-      var newUser = new User();
-      newUser.username = username;
-      newUser.password = password;
-      newUser.save(function(err, user){
-          console.log(newUser, '======newUser')
-
-          console.log(user, 'dfsdfsdfsdf999999999999999999')
-      })
-      //console.log(newUser, '=newUser')
-
-      console.log('will create')
-    } else {console.log(err)};
-  });
 }
 
 module.exports.loginUser = (payload, callback) =>  {
@@ -206,7 +186,6 @@ module.exports.loginUser = (payload, callback) =>  {
         if(res) {
           console.log('Password matched stored hash. \nLogging in.')
           // Create sessions
-          
         } else {
           console.log('Password did not match stored hash. \nTry again.')  
         }
