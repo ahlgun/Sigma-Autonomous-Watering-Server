@@ -11,19 +11,22 @@ var userSchema = mongoose.Schema({
   password: { type: String, required: true },
   stations: [
       {
-          name: { type: String, required: true },
+          name: {type: String, required: true},
           key: {type: String, required: true},
           plants: [
               {
-                  name: { type: String, required: true },
-                  imgUrl: { type: String, required: false },
-                  category: { type: String, required: false },
-                  description: { type: String, required: false },
-                  slot: { type: Number, required: false },
+                  name: {type: String, required: true},
+                  imgUrl: {type: String, required: false},
+                  category: {type: String, required: false},
+                  description: {type: String, required: false},
+                  slot: {type: Number, required: false},
                   date: {type: Date, default: Date()}
               }
-          ]
-     }
+          ],
+          settings: {
+              measure_humidity: {type: String, required: true, default: "10"}
+          }
+      }
   ]
 });
 
@@ -82,21 +85,20 @@ module.exports.addStation = (payload, callback) => {
     })
 }
 
-module.exports.deleteOneStation = (payload, callback) => {
+module.exports.updateStation = (payload, callback) => {
+    var updatedStation = payload.station;
     var username = payload.user.username;
-    let stationName = payload.station.name;
     User.findOne({username: username}, (err, user) => {
         if(user) {
             console.log(user, '=sersdjfgkhsdgf')
             let stations = user.stations;
             for(var station in user.stations){
                 console.log(station)
+                if(user.stations[station].name === updatedStation.name){
 
-                    stations = user.stations.filter((station) => {
-                        return station.name !== stationName;
-                    })
-                    user.stations = stations;
-
+                    stations[station] = updatedStation;
+                }
+                user.stations = stations;
             }
             User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
             {
@@ -106,7 +108,27 @@ module.exports.deleteOneStation = (payload, callback) => {
     })
 }
 
-
+module.exports.deleteOneStation = (payload, callback) => {
+    var username = payload.user.username;
+    let stationName = payload.station.name;
+    User.findOne({username: username}, (err, user) => {
+        if(user) {
+            console.log(user, '=sersdjfgkhsdgf')
+            let stations = user.stations;
+            for(var station in user.stations){
+                console.log(station)
+                    stations = user.stations.filter((station) => {
+                        return station.name !== stationName;
+                    })
+                    user.stations = stations;
+            }
+            User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
+            {
+                User.findOne({username: username}, callback(null, user.stations));
+            })
+        };
+    })
+}
 module.exports.addPlant = (payload, callback) => {
     // Get user
     // Push data to specific station

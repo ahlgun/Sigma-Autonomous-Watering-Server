@@ -14,20 +14,17 @@ exports.systemAddUser = function(req, res) {
 
 exports.systemGetUsers = function(req, res) {
 	User.getUsers(payload, (err, success) => {
-  	success ? socket.emit('system-get-users-confirmation', success) : (err) => {throw err}; 
-	});
+        success ? res.send(success) : (err) => {throw err}	});
 }
 
 exports.systemRemoveUser = function(req, res) {
   User.removeUser(payload, (err, success) => {
-  	success ? socket.emit('system-remove-user-confirmation', success) : (err) => {throw err}; 
-  });
+      success ? res.send(success) : (err) => {throw err}  });
 }
 
 exports.systemLoginUser = function(req, res) {
 	User.loginUser(payload, (err, success) => {
-  	success ? socket.emit('system-login-user-confirmation', success) : (err) => {throw err};
-	});
+        success ? res.send(success) : (err) => {throw err}	});
 }
 
 
@@ -36,6 +33,13 @@ exports.systemLoginUser = function(req, res) {
 exports.userAddStation = function(req, res) {
     var payload = req.body;
     User.addStation(payload, (err, success) => {
+        success ? res.send(success) : (err) => {throw err}
+    })
+}
+
+exports.userUpdateStation = function(req, res) {
+    var payload = req.body;
+    User.updateStation(payload, (err, success) => {
         success ? res.send(success) : (err) => {throw err}
     })
 }

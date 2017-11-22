@@ -8,8 +8,6 @@ var session = require('express-session');
 
 /* Socket.io */
 var http = require('http').Server( app );
-var io = require('socket.io')( http, { wsEngine: 'ws' } );
-var sharedsession = require("express-socket.io-session");
 
 /* MongoDB + Mongoose */
 var mongoose = require('mongoose');
@@ -54,64 +52,53 @@ var SocketHandler = require('./src/exports/SocketHandler.js');
 
 
 /* Socket server + request handling routing */
-io.on('connection', socket => {
 
-  // console.log(socket.handshake.headers.cookie)
-
-  // Login user through socket.session;
     app.post('/api/system-add-user', (req, res) => {
   	SocketHandler.systemAddUser(req, res);
-  });
-  app.post('/api/system-get-users', (req, res) => {
-  	SocketHandler.systemGetUsers(req, res);
-  });
-  app.post('/api/system-remove-user', (req, res) => {
-    SocketHandler.systemRemoveUser(req, res);
-  });
-  app.post('/api/system-login-user', (req, res) => {
-    SocketHandler.systemLoginUser(req, res);
-  });
-
+    });
+    app.post('/api/system-get-users', (req, res) => {
+      SocketHandler.systemGetUsers(req, res);
+    });
+    app.post('/api/system-remove-user', (req, res) => {
+      SocketHandler.systemRemoveUser(req, res);
+    });
+    app.post('/api/system-login-user', (req, res) => {
+      SocketHandler.systemLoginUser(req, res);
+    });
     app.post('/api/user-add-station', (req, res) => {
         SocketHandler.userAddStation(req, res);
     });
-
-  app.post('/api/user-delete-one-station', (req, res) => {
+    app.post('/api/user-update-station', (req, res) => {
+        SocketHandler.userUpdateStation(req, res);
+    });
+    app.post('/api/user-delete-one-station', (req, res) => {
         SocketHandler.userDeleteOneStation(req, res);
-});
-
+    });
     app.post('/api/user-get-stations', (req, res) => {
   	SocketHandler.userGetStations(req, res);
-  });
-
+    });
     app.post('/api/user-get-one-station', (req, res) => {
         SocketHandler.userGetOneStation(req, res);
     });
-
-  app.post('/api/user-add-plant', (req, res) => {
-  	SocketHandler.userAddPlant(req, res);
-  });
-
+    app.post('/api/user-add-plant', (req, res) => {
+      SocketHandler.userAddPlant(req, res);
+    });
     app.post('/api/user-remove-one-plant', (req, res) => {
         SocketHandler.userRemoveOnePlant(req, res);
     });
-
-  app.post('/api/user-get-one-plant', (req, res) => {
-      SocketHandler.userGetOnePlant(req, res);
-  });
-
-
-  app.post('/api/admin-water-plant', (req, res) => {
-  	socket.emit('chip-water-plant', payload);
-  })
+    app.post('/api/user-get-one-plant', (req, res) => {
+        SocketHandler.userGetOnePlant(req, res);
+    });
+    app.post('/api/admin-water-plant', (req, res) => {
+      socket.emit('chip-water-plant', payload);
+    })
   
-});
 
-/* CHIP REQUESTS*/
 app.get('/',                  (req, res) => { res.sendFile("./src/routes/client/index.html", {root:__dirname}); });
 app.get('/dev',               (req, res) => { /*console.log(req.session);*/ res.sendFile("./src/routes/dev/index.html", {root:__dirname});});
 app.get('/api/plants/postmeasurements',    (req, res) => { res.sendFile("./src/routes/api/add.html",    {root:__dirname}); });
 
+/* CHIP REQUESTS*/
 app.post('/api/getStation', (req, res) => {
   //req.body = {key: "key"}
   var payload = req.body;
