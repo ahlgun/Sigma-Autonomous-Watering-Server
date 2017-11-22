@@ -13,7 +13,6 @@ var http = require('http').Server( app );
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.connect('mongodb://sigma-itc-admin:sigma2013!@ds133465.mlab.com:33465/sigma-itc-autonomous-watering', {useMongoClient:true});
-
 mongoose.connect('mongodb://localhost/sigma-watering', {useMongoClient:true});
 
 /* Uuid Generator */
@@ -40,76 +39,91 @@ app.use(session({
   },
 }));
 
-/*
-io.use(sharedsession(session, {
-    autoSave:true
-})); 
-*/ 
-
+/********----ROUTES FOR DEV MODE----**************/
+app.get('/',                  (req, res) => { res.sendFile("./src/routes/client/index.html", {root:__dirname}); });
+app.get('/dev',               (req, res) => { /*console.log(req.session);*/ res.sendFile("./src/routes/dev/index.html", {root:__dirname});});
+app.get('/api/plants/postmeasurements',    (req, res) => { res.sendFile("./src/routes/api/add.html",    {root:__dirname}); });
 
 /* Module to handle Socket.io requests */
 var SocketHandler = require('./src/exports/SocketHandler.js');
 
 
-/* Socket server + request handling routing */
-
+/******************--------SYSTEM/AUTHENTICATION POSTS----************/
     app.post('/api/system-add-user', (req, res) => {
-  	SocketHandler.systemAddUser(req, res);
-    });
-    app.post('/api/system-get-users', (req, res) => {
-      SocketHandler.systemGetUsers(req, res);
-    });
-    app.post('/api/system-remove-user', (req, res) => {
-      SocketHandler.systemRemoveUser(req, res);
+        var payload = req.body;
+        User.addUser(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}});
     });
     app.post('/api/system-login-user', (req, res) => {
-      SocketHandler.systemLoginUser(req, res);
+        User.loginUser(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}});
     });
+    app.post('/api/system-get-users', (req, res) => {
+        User.getUsers(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}});
+    });
+    app.post('/api/system-remove-user', (req, res) => {
+        User.removeUser(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}});
+    });
+
+
+
+/********************----USER-------****************************/
+
+    /*************----STATION POSTS----*************/
     app.post('/api/user-add-station', (req, res) => {
-        SocketHandler.userAddStation(req, res);
+        var payload = req.body;
+        User.addStation(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}})
     });
     app.post('/api/user-update-station', (req, res) => {
-        SocketHandler.userUpdateStation(req, res);
+        var payload = req.body;
+        User.updateStation(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}})
     });
-    app.post('/api/user-delete-one-station', (req, res) => {
-        SocketHandler.userDeleteOneStation(req, res);
-    });
+
     app.post('/api/user-get-stations', (req, res) => {
-  	SocketHandler.userGetStations(req, res);
+        var payload = req.body;
+        User.getStations(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}})
     });
     app.post('/api/user-get-one-station', (req, res) => {
-        SocketHandler.userGetOneStation(req, res);
+        var payload = req.body;
+        User.getOneStation(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}})
     });
+    app.post('/api/user-delete-one-station', (req, res) => {
+        var payload = req.body;
+        User.deleteOneStation(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}})
+    });
+
+
+    /*************----PLANT POSTS----************/
     app.post('/api/user-add-plant', (req, res) => {
-      SocketHandler.userAddPlant(req, res);
-    });
-    app.post('/api/user-remove-one-plant', (req, res) => {
-        SocketHandler.userRemoveOnePlant(req, res);
+        var payload = req.body;
+        User.addPlant(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}})
     });
     app.post('/api/user-get-one-plant', (req, res) => {
-        SocketHandler.userGetOnePlant(req, res);
+        var payload = req.body;
+        User.getOnePlant(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}})
     });
-    app.post('/api/admin-water-plant', (req, res) => {
-      socket.emit('chip-water-plant', payload);
-    })
-  
+    app.post('/api/user-remove-one-plant', (req, res) => {
+        var payload = req.body;
+        User.removeOnePlant(payload, (err, success) => {
+            success ? res.send(success) : (err) => {throw err}})
+    });
 
-app.get('/',                  (req, res) => { res.sendFile("./src/routes/client/index.html", {root:__dirname}); });
-app.get('/dev',               (req, res) => { /*console.log(req.session);*/ res.sendFile("./src/routes/dev/index.html", {root:__dirname});});
-app.get('/api/plants/postmeasurements',    (req, res) => { res.sendFile("./src/routes/api/add.html",    {root:__dirname}); });
-
-/* CHIP REQUESTS*/
-app.post('/api/getStation', (req, res) => {
-  //req.body = {key: "key"}
-  var payload = req.body;
-  User.chipGetStation(payload, (station) => {
-        station ?
-                res.send(station)
-            :
-            console.log('Station not found.')
-  })
-});
+/************************----CHIP----***********************/
+    app.post('/api/getStation', (req, res) => {
+        var payload = req.body;
+        User.chipGetStation(payload, (station) => {
+            station ? res.send(station) : console.log('Station not found.')})
+    });
 
 
-//------START APP ON PORT (port)--------//
+//**************------START APP ON PORT (port)--------**********************//
 http.listen(app.get('port'),  () => { console.log('Node app is running on port', app.get('port')); });

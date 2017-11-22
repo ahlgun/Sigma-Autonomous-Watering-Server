@@ -20,7 +20,7 @@ var userSchema = mongoose.Schema({
                   category: {type: String, required: false},
                   description: {type: String, required: false},
                   slot: {type: Number, required: false},
-                  date: {type: Date, default: Date()}
+                  date: {type: Date, default: Date()},
               }
           ],
           settings: {
@@ -33,229 +33,237 @@ var userSchema = mongoose.Schema({
 
 var User = module.exports = mongoose.model('User', userSchema);
 
+/*********--------SYSTEM/AUTHENTICATION FUNCTIONS----************/
 
-module.exports.getStations = (payload, callback) => {
-  var username = payload.user.username;
-  User.findOne({username:username}, (err, user) => {
-    if(user) {
-      if(user.stations !== null || user.stations.length === 0) {
-        callback(null, user.stations)
-      } else {
-        callback(null, 'User has no stations, or the stations directory is prohibited.')
-      }
-    } else {
-      callback(null, 'User could not be found.');
-    }
-  })
-}
+    /*****----ADD A USER----******/
+    module.exports.addUser = (payload, callback) => {
+        var username = payload.username;
+        var password = payload.password;
+        /* User.findOne({username:username}, (err, user) => {
+          if(user) {callback('User already exists')}
+        }) */
+        bcrypt.hash(password, saltRounds, (err, hash) => {
+            if(!err) {
+                password = hash;
+                var newUser = new User();
+                User.create(newUser, callback)
+                newUser.username = username;
+                newUser.password = password;
+                //newUser.save();
+            } else {console.log(err)};
+        });
+    };
 
-module.exports.getOneStation = (payload, callback) => {
-    var username = payload.user.username;
-    var stationName = payload.station.name;
-    User.findOne({username:username}, (err, user) => {
-        if(user) {
-            if(user.stations !== null || user.stations.length === 0) {
-                for(var station in user.stations){
-                    if(user.stations[station].name === stationName){
-                        callback(null, user.stations[station])
+    /*****----LOG IN USER----******/
+    module.exports.loginUser = (payload, callback) =>  {
+        User.findOne({username:payload.username}, (err, user) => {
+            if(user) {
+                bcrypt.compare(payload.password, user.password, (err, res) => {
+                    if(res) {
+                        console.log('Password matched stored hash. \nLogging in.')
+                        // Create sessions
+                    } else {
+                        console.log('Password did not match stored hash. \nTry again.')
                     }
-                }
+                });
             } else {
+                console.log('User ' + payload.username + ' could not be found.');
+            }
+        });
+    };
+
+    /*****----RETURN USERS----******/
+    module.exports.getUsers = (payload, callback) =>   {
+        console.log('get users')
+        User.find(callback);
+    }
+
+    /*****----REMOVE ONE USER----******/
+    module.exports.removeUser = (payload, callback) => {
+        User.findByIdAndRemove(
+            {_id:payload.id},
+            callback
+        );
+    };
+
+
+/********************----USER FUNCTIONS-------****************************/
+
+    /*************----STATION FUNCTIONS----*************/
+
+        /*****----RETURN USERS STATIONS----******/
+        module.exports.getStations = (payload, callback) => {
+          var username = payload.user.username;
+          User.findOne({username:username}, (err, user) => {
+            if(user) {
+              if(user.stations !== null || user.stations.length === 0) {
+                callback(null, user.stations)
+              } else {
                 callback(null, 'User has no stations, or the stations directory is prohibited.')
+              }
+            } else {
+              callback(null, 'User could not be found.');
             }
-        } else {
-            callback(null, 'User could not be found.');
-        }
-    })
-}
+          })
+        };
 
-
-module.exports.addStation = (payload, callback) => {
-      console.log('Adding station: ', payload.station)
-      var station = payload.station;
-      var username = payload.user.username;
-      var password = payload.user.password;
-    User.findOne({username: username}, (err, user) => {
-        user.stations.push(station)
-
-        User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
-        {
-            console.log(user, '=addStationUserdfmdskf')
-        })
-    })
-}
-
-module.exports.updateStation = (payload, callback) => {
-    var updatedStation = payload.station;
-    var username = payload.user.username;
-    User.findOne({username: username}, (err, user) => {
-        if(user) {
-            console.log(user, '=sersdjfgkhsdgf')
-            let stations = user.stations;
-            for(var station in user.stations){
-                console.log(station)
-                if(user.stations[station].name === updatedStation.name){
-
-                    stations[station] = updatedStation;
+        /*****----RETURN ONE STATION----******/
+        module.exports.getOneStation = (payload, callback) => {
+            var username = payload.user.username;
+            var stationName = payload.station.name;
+            User.findOne({username:username}, (err, user) => {
+                if(user) {
+                    if(user.stations !== null || user.stations.length === 0) {
+                        for(var station in user.stations){
+                            if(user.stations[station].name === stationName){
+                                callback(null, user.stations[station]);
+                            }
+                        }
+                    } else {
+                        callback(null, 'User has no stations, or the stations directory is prohibited.')
+                    }
+                } else {
+                    callback(null, 'User could not be found.');
                 }
-                user.stations = stations;
-            }
-            User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
-            {
-                User.findOne({username: username}, callback(null, user.stations));
             })
         };
-    })
-}
 
-module.exports.deleteOneStation = (payload, callback) => {
-    var username = payload.user.username;
-    let stationName = payload.station.name;
-    User.findOne({username: username}, (err, user) => {
-        if(user) {
-            console.log(user, '=sersdjfgkhsdgf')
-            let stations = user.stations;
-            for(var station in user.stations){
-                console.log(station)
-                    stations = user.stations.filter((station) => {
-                        return station.name !== stationName;
+        /*****----ADD A STATION TO USER----******/
+        module.exports.addStation = (payload, callback) => {
+              var stationToAdd = payload.station;
+              var username = payload.user.username;
+            User.findOne({username: username}, (err, user) => {
+                let filteredStations = user.stations.filter((filterStation) => {
+                    return filterStation.name === stationToAdd.name
+                });
+                if(filteredStations.length === 0){
+                    user.stations.push(stationToAdd);
+                    User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
+                    {
+                        //RETURN SOMETHING
+                    });
+                }
+                else{
+                    callback('Station already exists', user)
+                }
+            })
+        };
+
+        /*****----UPDATE A STATION----******/
+        module.exports.updateStation = (payload, callback) => {
+            var updatedStation = payload.station;
+            var username = payload.user.username;
+            console.log('asdsfsdfsdf')
+            User.findOne({username: username}, (err, user) => {
+                if(user) {
+                    console.log(user, '=sersdjfgkhsdgf')
+                    let stations = user.stations;
+                    for(var station in user.stations){
+                        console.log(station)
+                        if(user.stations[station].name === updatedStation.name){
+
+                            stations[station] = updatedStation;
+                        }
+                        user.stations = stations;
+                    }
+                    User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
+                    {
+                        User.findOne({username: username}, callback(null, user.stations));
                     })
-                    user.stations = stations;
-            }
-            User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
-            {
-                User.findOne({username: username}, callback(null, user.stations));
+                }
             })
         };
+
+        /*****----DELETE ONE STATION----******/
+        module.exports.deleteOneStation = (payload, callback) => {
+            var username = payload.user.username;
+            let stationName = payload.station.name;
+            User.findOne({username: username}, (err, user) => {
+                if(user) {
+                    console.log(user, '=sersdjfgkhsdgf');
+                    let stations = user.stations;
+                    for(var station in user.stations){
+                        console.log(station)
+                            stations = user.stations.filter((station) => {
+                                return station.name !== stationName;
+                            })
+                            user.stations = stations;
+                    }
+                    User.findOneAndUpdate({username: username}, {$set: user}, (err, user) =>
+                    {
+                        User.findOne({username: username}, callback(null, user.stations));
+                    })
+                };
+            })
+        };
+
+
+    /*************----PLANT FUNCTIONS----*************/
+
+    /*****----ADD A PLANT TO A STATION----******/
+    module.exports.addPlant = (payload, callback) => {
+        User.findOne({username: payload.user.username}, (err, user) => {
+            let stations = user.stations;
+            let plantToAdd = payload.plant;
+            for(var station in user.stations){
+              if(user.stations[station].name === payload.station.name){
+                  user.stations[station].plants.push(plantToAdd);
+              }
+            }
+        User.findOneAndUpdate({username: payload.user.username}, {$set: user}, callback);
     })
-}
-module.exports.addPlant = (payload, callback) => {
-    // Get user
-    // Push data to specific station
-    // Return
-    User.findOne({username: payload.user.username}, (err, user) => {
-        let stations = user.stations;
-        let plantToAdd = payload.plant;
-        for(var station in user.stations){
-          if(user.stations[station].name === payload.station.name){
-              user.stations[station].plants.push(plantToAdd);
-          }
-        }
-    User.findOneAndUpdate({username: payload.user.username}, {$set: user}, callback);
-})
-}
+    };
 
-module.exports.removeOnePlant = (payload, callback) => {
-    let plantName = payload.plant.name;
-    let stationName = payload.station.name;
-    let username = payload.user.username;
-    User.findOne({username: username}, (err, user) => {
-        let stations = user.stations;
-        for(var station in stations){
-            if(stations[station].name === stationName){
-                        let updatedPlantsList = stations[station].plants.filter((plant) => {
-                            return plant.name !== plantName;
-                        })
-                user.stations[station].plants = updatedPlantsList;
-                console.log(updatedPlantsList, '=updatedList')
+    /*****----REMOVE A PLANT----******/
+    module.exports.removeOnePlant = (payload, callback) => {
+        let plantName = payload.plant.name;
+        let stationName = payload.station.name;
+        let username = payload.user.username;
+        User.findOne({username: username}, (err, user) => {
+            let stations = user.stations;
+            for(let station in stations){
+                if(stations[station].name === stationName){
+                    stations = stations[station].plants.filter((plant) => {
+                                return plant.name !== plantName;
+                    });
+                    user.stations[station].plants = stations;
                 }
             }
-        User.findOneAndUpdate({username: payload.user.username}, {$set: user}, (err, user) =>
-        {
-            User.findOne({username: username}, callback(null, user.stations));
+            User.findOneAndUpdate({username: payload.user.username}, {$set: user}, (err, user) => {
+                User.findOne({username: username}, callback(null, user.stations));
+            })
         })
-        })
-    }
+    };
 
+/********************----CHIP FUNCTIONS-------****************************/
 
-
-module.exports.getUsers = (payload, callback) =>   {
-    console.log('get users')
-    User.find(callback);
-
-}
-
-module.exports.removeUser = (payload, callback) => { 
-  User.findByIdAndRemove(
-    {_id:payload.id}, 
-    callback
-  ); 
-}
-
-module.exports.addUser = (payload, callback) => {
-    var username = payload.username;
-    var password = payload.password;
-    /* User.findOne({username:username}, (err, user) => {
-      if(user) {callback('User already exists')}
-    }) */
-    bcrypt.hash(password, saltRounds, (err, hash) => {
-        if(!err) {
-            password = hash;
-            var userObject = {username: username, password: password};
-            var newUser = new User();
-            User.create(newUser, callback)
-            newUser.username = username;
-            newUser.password = password;
-            //newUser.save();
-        } else {console.log(err)};
-    });
-}
-
-module.exports.loginUser = (payload, callback) =>  {
-  User.findOne({username:payload.username}, (err, user) => {
-    if(user) {
-      bcrypt.compare(payload.password, user.password, (err, res) => {
-        if(res) {
-          console.log('Password matched stored hash. \nLogging in.')
-          // Create sessions
-        } else {
-          console.log('Password did not match stored hash. \nTry again.')  
-        }
-      });
-    } else {
-      console.log('User ' + payload.username + ' could not be found.');
-    }
-  });
-}
-
-
-
-
-
-//-------------CHIP REQUESTS----------------//
-
-module.exports.chipInitializeStation = (payload, callback) =>  {
-    User.find({"stations":{"$elemMatch":{"key": payload.station.key}}},
-        (err, success) => {
-            if(success){
-                for(var station in success.stations) {
-                    if (station.key === payload) {
-                        callback(success.stations[station]);
+    module.exports.chipInitializeStation = (payload, callback) =>  {
+        User.find({"stations":{"$elemMatch":{"key": payload.station.key}}},
+            (err, success) => {
+                if(success){
+                    for(var station in success.stations) {
+                        if (station.key === payload) {
+                            callback(success.stations[station]);
+                        }
                     }
                 }
             }
-        }
-    )
-}
+        )
+    };
 
-module.exports.chipGetStation = (payload, callback) =>  {
-    User.find({"stations":{"$elemMatch":{"key": payload.key}}},
-        (err, success) => {
-        var user = success [0];
-            if(success){
-                for(var station in success[0].stations) {
-                    if (success[0].stations[station].key === payload.key) {
-                        callback(success[0].stations[station])
+    module.exports.chipGetStation = (payload, callback) =>  {
+        User.find({"stations":{"$elemMatch":{"key": payload.key}}},
+            (err, success) => {
+            var user = success [0];
+                if(success){
+                    for(var station in success[0].stations) {
+                        if (success[0].stations[station].key === payload.key) {
+                            callback(success[0].stations[station])
+                        }
                     }
                 }
             }
-        }
-    )
-}
-
-
-module.exports.chipAddStationMeasurement = (payload, callback) => {
-
-}
+        )
+    }
 
 
